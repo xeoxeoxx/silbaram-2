@@ -115,3 +115,11 @@
     font-size: 18px;
 }
 
+.order_select{
+    float: right;
+    width: 35%;
+    border: 1.5px solid #50CDBB;
+    margin-top: 50px;
+    padding: 15px;
+}
+

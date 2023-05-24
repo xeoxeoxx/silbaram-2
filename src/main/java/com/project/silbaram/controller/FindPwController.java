@@ -21,7 +21,7 @@ public class FindPwController {
 
     @GetMapping("/findpw")
     public String findPwGET (){
-        return "silbaram/member/find_pw";
+        return "member/find_pw";
     }
 
 
@@ -36,15 +36,15 @@ public class FindPwController {
                 model.addAttribute("email", email);
                 model.addAttribute("userId", userId);
                 model.addAttribute("msg", "비밀번호 변경에 성공하였습니다.");
-                return "silbaram/member/login";
+                return "member/login";
             } else {
                 model.addAttribute("msg", "비밀번호 변경에 실패하였습니다.");
-                return "silbaram/member/find_pw_fail";
+                return "member/find_pw_fail";
             }
         } catch (Exception e) {
             // 예외 처리
             model.addAttribute("msg", "오류가 발생했습니다.");
-            return "silbaram/member/find_pw_fail";
+            return "member/find_pw_fail";
         }
     }
 

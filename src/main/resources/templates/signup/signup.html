@@ -15,8 +15,8 @@
 
 <div layout:fragment="Content">
     <div id="contentBox">
-        <form th:action="@{/templates/signup}" method="post" id="signupBox" name="frmMemberInsert">
-            <input type="hidden" name="email">
+        <form th:action="@{/signup}" method="post" id="signupBox" name="frmMemberInsert">
+            <input type="hidden" name="email" class="emailInput">
             <div>
                 <label for="userId">아이디:</label>
                 <input type="text" id="userId" name="userId" required/>
@@ -58,7 +58,7 @@
                     <label for="email1">이메일:</label>
                     <input type="text" id="email1" name="email1" required/>
                     <span>@</span>
-                    <select id="email2" name="email2" onchange="addDomain()">
+                    <select id="email2" name="email2">
                         <option value="">도메인 선택</option>
                         <option value="@naver.com">@naver.com</option>
                         <option value="@gmail.com">@gmail.com</option>

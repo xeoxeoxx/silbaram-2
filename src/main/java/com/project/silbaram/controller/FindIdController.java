@@ -21,7 +21,7 @@ public class FindIdController {
 
     @GetMapping("/findid")
     public String findIdGET (){
-        return "silbaram/member/find_id";
+        return "member/find_id";
     }
 
 
@@ -31,15 +31,15 @@ public class FindIdController {
             MemberDTO memberDTO = memberService.getUserIdByEmail(checkEmail);
             if (memberDTO.getUserId() != null && memberDTO !=null) {
                 model.addAttribute("userId", memberDTO.getUserId());
-                return "silbaram/member/find_id_result";
+                return "member/find_id_result";
             } else {
                 model.addAttribute("msg", "존재하지 않는 이메일");
-                return "silbaram/member/find_id_fail";
+                return "member/find_id_fail";
             }
         } catch (Exception e) {
             // 예외 처리
             model.addAttribute("msg", "오류가 발생했습니다.");
-            return "silbaram/member/find_id_fail";
+            return "member/find_id_fail";
         }
     }
 

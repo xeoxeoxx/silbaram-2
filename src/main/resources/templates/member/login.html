@@ -34,8 +34,8 @@
                     <a href="https://kauth.kakao.com/oauth/authorize?client_id=2d4da76a7e51b2d482ac929a10ee544b&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code" class="kakao">카카오로그인</a>
                 </div>
                 <div>
-                    <a th:href="@{/silbaram/find_id}">아이디찾기</a>
-                    <a th:href="@{/silbaram/find_pw}">패스워드찾기</a>
+                    <a th:href="@{/findid}">아이디찾기</a>
+                    <a th:href="@{/findpw}">패스워드찾기</a>
                 </div>
                 <div>
                     <button type="submit" class="login">Log in</button>
@@ -52,7 +52,7 @@
     $(document).ready(function() {
         let message = "[[${msg}]]";
         console.log(message);
-        if (message != "") {
+        if (message !== "" && message !== "null") {
             alert(message);
         }else {
         }

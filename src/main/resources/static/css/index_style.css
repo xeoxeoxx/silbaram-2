@@ -19,33 +19,16 @@
 }
 
 .inner_banner{
+    width: 100%;
     height: 300px;
     border-radius: 15px;
     margin: 0 auto;
 }
 
-.banner1{
-    background-color: salmon;
-}
-
-.banner2{
-    background-color: bisque;
-}
-
-.banner3{
-    background-color: lightsteelblue;
-}
-
-.banner4{
-    background-color: lightgoldenrodyellow;
-}
-
-.banner5{
-    background-color: lightseagreen;
-}
-
-.banner6{
-    background-color: lightslategray;
+.inner_banner > img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 h3{

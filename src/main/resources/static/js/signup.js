@@ -166,8 +166,13 @@ function execDaumPostcode() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
     document.querySelector('.btn-submit').addEventListener('click', function () {
-        const frm = document.querySelector('form')
-        frm.email.value = frm.email1.value + frm.email2.value
+        const emailInput = document.querySelector('.emailInput');
+        const email1 = document.querySelector('#email1');
+        const email2 = document.querySelector('#email2');
+
+        emailInput.value = email1.value + email2.value;
+
     });
 })

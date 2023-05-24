@@ -61,13 +61,14 @@
 }
 
 .kakao{
-    -webkit-appearance: none;
     border: 1px solid #777;
     border-radius: 15px;
     background-color: white;
     display: block;
     height: 45px;
     width: 100%;
+    text-align: center;
+    line-height: 45px;
 }
 
 #loginForm div:nth-child(4) input{

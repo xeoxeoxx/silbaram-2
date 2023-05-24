@@ -42,7 +42,7 @@ document.addEventListener("scroll", e => {
 
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URL(location.href).searchParams;
-    const el = document.getElementById('searchType');
+    const el = document.getElementById('msType');
     const len = el.options.length;
 
     // 목록 페이지가 검색 목록을 보여주는 페이지라면 (검색결과 화면이라면)
