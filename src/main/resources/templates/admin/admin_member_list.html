@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="Content">
+    <div class="row mt-3">
+        <form action="/admin/admin_book_list" method="get">
+            <div class="col">
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <select id="searchType" class="form-select" name="types">
+
+                            <option value="t" th:selected="${pageRequestDTO.types == 't'}">UserId</option>
+                            <option value="c" th:selected="${pageRequestDTO.types == 'c'}">name</option>
+                            <option value="w" th:selected="${pageRequestDTO.types == 'w'}">nickName</option>
+                            <option value="tc" th:selected="${pageRequestDTO.types == 'tc'}">UserId+name</option>
+                            <option value="tcw" th:selected="${pageRequestDTO.types == 'tcw'}">UserId+name+nickName</option>
+                        </select>
+                    </div>
+                    <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                        <button class="btn btn-outline-secondary writeBtn" type="button" th:href="${admin_book_add_book}">Write</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    User List
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">User List</h5>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">mid</th>
+                            <th scope="col">userId</th>
+                            <th scope="col">password</th>
+                            <th scope="col">nickName</th>
+                            <th scope="col">name</th>
+                            <th scope="col">birthDate</th>
+                            <th scope="col">gender</th>
+                            <th scope="col">phoneNumber</th>
+                            <th scope="col">email</th>
+                            <th scope="col">zipcode</th>
+                            <th scope="col">address1</th>
+                            <th scope="col">address2</th>
+                            <th scope="col">socialLogin</th>
+                            <th scope="col">isAdmin</th>
+                            <th scope="col">regDate</th>
+                            <th scope="col">uuid</th>
+                        </tr>
+                        </thead>
+
+                        <tbody th:with="link = ${pageRequestDTO.getLink()}">
+                        <tr th:each="dto:${responseDTO.dtoList}">
+                            <th scope="col">[[${dto.mid}]]</th>
+                            <td>[[${dto.userId}]]</td>
+                            <td>[[${dto.password}]]</td>
+                            <td>[[${dto.nickName}]]</td>
+                            <td>[[${dto.name}]]</td>
+                            <td>[[${dto.birthDate}]]</td>
+                            <td>[[${dto.gender}]]</td>
+                            <td>[[${dto.phoneNumber}]]</td>
+                            <td>[[${dto.email}]]</td>
+                            <td>[[${dto.zipcode}]]</td>
+                            <td>[[${dto.address1}]]</td>
+                            <td>[[${dto.address2}]]</td>
+                            <td>[[${dto.socialLogin}]]</td>
+                            <td>[[${dto.isAdmin}]]</td>
+                            <td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd')}]]</td>
+                            <td>[[${dto.uuid}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--페이지 버튼-->
+                    <div class="float-end" >
+                        <ul class="pagination flex-wrap">
+                            <div th:if="${responseDTO.total > 0}">
+                                <li class="page-item" th:if="${responseDTO.prev}">
+                                    <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                                </li>
+                                <!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+                                <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                    <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                                        <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                        <!--data-num이라는 속성으로 페이지 처리-->
+                                    </li>
+                                </th:block>
+                                <li class="page-item" th:if="${responseDTO.next}">
+                                    <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--modal-->
+<!--	<div class="modal" tabindex="-1">-->
+<!--		<div class="modal-dialog">-->
+<!--			<div class="modal-content">-->
+<!--				<div class="modal-header">-->
+<!--					<h5 class="modal-title">Modal title</h5>-->
+<!--					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--				</div>-->
+<!--				<div class="modal-body">-->
+<!--					<p>완료</p>-->
+<!--				</div>-->
+<!--				<div class="modal-footer">-->
+<!--					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--					<button type="button" class="btn btn-primary">Save changes</button>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+
+
+</div>
+<script layout:fragment="script" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function(){
+        const urlParams = new URL(location.href).searchParams;
+        const el = document.getElementById('searchType');
+        const len = el.options.length;
+
+        // 문의 목록 페이지가 검색 목록을 보여주는 페이지라면 (검색결과 화면이라면)
+        if(urlParams.get('types') !== null){
+            const str = urlParams.get('types');
+            console.log(str)
+            for (let i=0; i<len; i++){
+                //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                if(el.options[i].value == str){
+                    el.options[i].selected = true;
+                }
+            }
+        }else{
+            el.options[0].selected = true;
+        }
+    });
+
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+
+        if (target.tagName !== 'A') {
+            return;
+        }
+
+        const num = target.getAttribute("data-num");
+        const formObj = document.querySelector("form");
+
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+        formObj.submit();
+
+    }, false)
+
+    // 검색
+    /*
+        document.querySelector(".searchBtn").addEventListener("click", function (e) {
+            var searchType = '';
+            var keyword = '';
+
+            document.getElementById('searchType')
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            //self.location = '/silbaram/board/list_qna';
+        }, false)
+    */
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        self.location = '/admin/admin_book_list';
+    }, false)
+
+    document.querySelector(".writeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        self.location = '/admin/add_book';
+    }, false)
+
+    //show modal
+    //redirectAttributes.addFlashAttribute("result", bno);의 result 변수를 이용해서 bno가 전달됨
+    //const result = [[${result}]];
+
+    //const modal = new bootstrap.Modal(document.querySelector(".modal"));
+
+    //if (result) {
+    //	modal.show();
+    //}
+</script>
+</body>
+</html>

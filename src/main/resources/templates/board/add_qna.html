@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<meta charset="UTF-8">
+	<title>QnA Board Register</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+	<div>
+		<div>
+			QnA Board Register
+		</div>
+		<div>
+			<form action="/silbaram/board/add_qna" method="post">
+				<div>
+					<span>Title</span>
+					<input type="text" name="title" placeholder="Title">
+				</div>
+				<div>
+					<span>Content</span>
+					<textarea rows="5" name="content"></textarea>
+				</div>
+				<div>
+					<span>memberId</span>
+					<input type="text" name="memberId" th:value="${session.mid}" readonly>
+				
+				</div>
+				<input type="hidden" name="pageType" value="Q">
+				
+				<div>
+					<div>
+						<button type="submit">Submit</button>
+						<button type="reset">Reset</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+	const errors = [[${errors}]]
+	console.log(errors);
+	
+	let errorMsg = '';
+	if (errors) {
+		for (let i = 0; i < errors.length; i++) {
+			errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`;
+		}
+		alert(errorMsg);
+	}
+</script>
+
+</body>
+</html>

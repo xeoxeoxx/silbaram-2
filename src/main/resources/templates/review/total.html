@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<meta charset="UTF-8">
+	<title>Review List</title>
+</head>
+<body>
+<div layout:fragment="Content">
+	<div class="card-header">
+		Review List
+	</div>
+	<div class="card-body">
+		<h5 class="card-title">Review List</h5>
+		<table class="table">
+			<thead>
+			<tr>
+				<th scope="col">Rid</th>
+				<th scope="col">리뷰 내용</th>
+				<th scope="col">작성자</th>
+				<th scope="col">작성일자</th>
+			</tr>
+			</thead>
+			
+			<tbody th:with="link = ${pageRequestDTO.getLink()}">
+			<tr th:each="dto:${responseDTO.dtoList}">
+				<th scope="col">[[${dto.rid}]]</th>
+				<td>[[${dto.content}]]</td>
+				<td>[[${dto.nickname}]]</td>
+				<td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd')}]]</td>
+				<td th:if="${#strings.equals(session.mid, dto.mid)}">
+					<a th:href="@{/templates/review/remove(rid=${dto.rid})}">삭제</a></td>
+			</tr>
+			</tbody>
+		</table>
+		<!--페이지 버튼-->
+		<div class="float-end">
+			<ul class="pagination flex-wrap">
+				<li class="page-item" th:if="${responseDTO.prev}">
+					<a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+				</li>
+				<!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+				<th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+					<li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+						<a class="page-link" th:data-num="${i}">[[${i}]]</a>
+						<!--data-num이라는 속성으로 페이지 처리-->
+					</li>
+				</th:block>
+				<li class="page-item" th:if="${responseDTO.next}">
+					<a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+				</li>
+			</ul>
+		</div>
+	
+	</div>
+</div>
+</div>
+
+
+</body>
+</html>

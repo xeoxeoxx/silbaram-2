@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+<body>
+<div layout:fragment="Content">
+	<div class="col">
+		<div class="card">
+			<div class="card-header">
+				Search Book List
+			</div>
+			<div>
+				[[${pageRequestDTO.keyword}]] 검색결과 00건
+			</div>
+			<div>
+				전체 : 00건 | 도서 검색 결과 : 00건 | 작가 검색 결과 : 00건
+			</div>
+			<div>
+				카테고리 관련 필터 : <a>고전문학(00)</a>|<a>청소년(00)</a>|<a>에세이(00)</a>|-----
+			</div>
+
+			<div class="card-body">
+				<h5 class="card-title">Search Book List</h5>
+				<table class="table">
+					<thead>
+					<tr>
+						<th scope="col">bkid</th>
+						<th scope="col">name</th>
+						<th scope="col">Writer</th>
+						<th scope="col">Price</th>
+					</tr>
+					</thead>
+
+					<tbody th:with="link = ${pageRequestDTO.getLink()}">
+					<tr th:each="dto:${responseDTO.dtoList}">
+						<th scope="col">[[${dto.bkid}]]</th>
+						<td><a th:href="|@{/templates/products/detail(bkid =${dto.bkid})}&${link}|"> [[${dto.name}]]</a></td>
+						<td>[[${dto.writer}]]</td>
+						<td>[[${dto.price}]]</td>
+					</tr>
+					</tbody>
+				</table>
+				<!--페이지 버튼-->
+				<div class="float-end">
+					<ul class="pagination flex-wrap">
+						<li class="page-item" th:if="${responseDTO.prev}">
+							<a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+						</li>
+						<!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+						<th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+							<li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+								<a class="page-link" th:data-num="${i}">[[${i}]]</a>
+								<!--data-num이라는 속성으로 페이지 처리-->
+							</li>
+						</th:block>
+						<li class="page-item" th:if="${responseDTO.next}">
+							<a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+
+<script layout:fragment="script" th:inline="javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		const urlParams = new URL(location.href).searchParams;
+		const el = document.getElementById('searchType');
+		const len = el.options.length;
+		
+		//페이지가 검색 목록을 보여주는 페이지라면 (검색결과 화면이라면)
+		if (urlParams.get('types') !== null) {
+			const str = urlParams.get('types');
+			console.log(str)
+			for (let i = 0; i < len; i++) {
+				//select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+				if (el.options[i].value == str) {
+					el.options[i].selected = true;
+				}
+			}
+		} else {
+			el.options[0].selected = true;
+		}
+	});
+	
+	document.querySelector(".pagination").addEventListener("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		const target = e.target;
+		
+		if (target.tagName !== 'A') {
+			return;
+		}
+		
+		const num = target.getAttribute("data-num");
+		const formObj = document.querySelector("form");
+		
+		formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+		formObj.submit();
+		
+	}, false)
+	
+	// 검색
+	/*
+		document.querySelector(".searchBtn").addEventListener("click", function (e) {
+			var searchType = '';
+			var keyword = '';
+
+			document.getElementById('searchType')
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			//self.location = '/silbaram/board/list_qna';
+		}, false)
+	*/
+	
+	
+	
+	//show modal
+	//redirectAttributes.addFlashAttribute("result", bno);의 result 변수를 이용해서 bno가 전달됨
+	//const result = [[${result}]];
+	
+	//const modal = new bootstrap.Modal(document.querySelector(".modal"));
+	
+	//if (result) {
+	//	modal.show();
+	//}
+</script>
+
+
+</body>
+</html>

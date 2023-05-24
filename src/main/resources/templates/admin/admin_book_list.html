@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="Content">
+    <div class="">
+        <form action="/admin/admin_book_list" method="get">
+            <div class="">
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <div class="">
+                    <div class="">
+                        <select id="searchType" class="" name="types">
+                            <option value="t" th:selected="${pageRequestDTO.types == 't'}">책제목</option>
+                            <option value="c" th:selected="${pageRequestDTO.types == 'c'}">카테고리</option>
+                            <option value="w" th:selected="${pageRequestDTO.types == 'w'}">작가</option>
+                            <option value="tc" th:selected="${pageRequestDTO.types == 'tc'}">책제목+카테고리</option>
+                            <option value="tcw" th:selected="${pageRequestDTO.types == 'tcw'}">첵제목+카테고리+작가</option>
+                        </select>
+                    </div>
+                    <input type="text" class="" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div class="">
+                        <button class="  searchBtn" type="submit">Search</button>
+                        <button class="  clearBtn" type="button">Clear</button>
+                        <button class="  writeBtn" type="button" th:href="${admin_book_add_book}">Write</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="">
+            <div class="">
+                <div class="">
+                    Admin Book List
+                </div>
+                <div class="">
+                    <h5 class="">Admin Book List List</h5>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">bkid</th>
+                            <th scope="col">name</th>
+                            <th scope="col">writer</th>
+                            <th scope="col">publicher</th>
+                            <th scope="col">price</th>
+                            <th scope="col">sysnopsis</th>
+                            <th scope="col">pages</th>
+                            <th scope="col">isbnNum</th>
+                            <th scope="col">category</th>
+                            <th scope="col">fildeSize</th>
+                            <th scope="col">language</th>
+                            <th scope="col">voiceLength</th>
+                            <th scope="col">bookUrl</th>
+                            <th scope="col">bookTextUrl</th>
+                            <th scope="col">bookImage</th>
+                        </tr>
+                        </thead>
+
+                        <tbody th:with="link = ${pageRequestDTO.getLink()}">
+                        <tr th:each="dto:${responseDTO.dtoList}">
+                            <th scope="col">[[${dto.bkid}]]</th>
+                            <td><a th:href="|@{/admin/admin_book_info(bkid =${dto.bkid})}&${link}|"> [[${dto.name}]]</a></td>
+                            <td>[[${dto.writer}]]</td>
+                            <td>[[${dto.publisher}]]</td>
+                            <td>[[${dto.price}]]</td>
+                            <td>[[${dto.synopsis}]]</td>
+                            <td>[[${dto.pages}]]</td>
+                            <td>[[${dto.isbnNum}]]</td>
+                            <td>[[${dto.categoryVO.cateName}]]</td>
+                            <td>[[${dto.fileSize}]]</td>
+                            <td>[[${dto.languageVO.language}]]</td>
+                            <td>[[${dto.voiceLength}]]</td>
+                            <td>[[${dto.bookUrl}]]</td>
+                            <td>[[${dto.bookTextUrl}]]</td>
+                            <td>[[${dto.bookImage}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--페이지 버튼-->
+                    <div class="" >
+                        <ul class="pagination_admin_bookList flex-wrap">
+                            <div th:if="${responseDTO.total > 0}">
+                                <li class="page-item" th:if="${responseDTO.prev}">
+                                    <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                                </li>
+                                <!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+                                <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                    <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                                        <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                        <!--data-num이라는 속성으로 페이지 처리-->
+                                    </li>
+                                </th:block>
+                                <li class="page-item" th:if="${responseDTO.next}">
+                                    <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script layout:fragment="script" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function(){
+        const urlParams = new URL(location.href).searchParams;
+        const el = document.getElementById('searchType');
+        const len = el.options.length;
+
+        // 문의 목록 페이지가 검색 목록을 보여주는 페이지라면 (검색결과 화면이라면)
+        if(urlParams.get('types') !== null){
+            const str = urlParams.get('types');
+            console.log(str)
+            for (let i=0; i<len; i++){
+                //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                if(el.options[i].value == str){
+                    el.options[i].selected = true;
+                }
+            }
+        }else{
+            el.options[0].selected = true;
+        }
+    });
+
+    document.querySelector(".pagination_admin_bookList").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+
+        if (target.tagName !== 'A') {
+            return;
+        }
+
+        const num = target.getAttribute("data-num");
+        const formObj = document.querySelector("form");
+
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+        formObj.submit();
+
+    }, false)
+
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        self.location = '/admin/admin_book_list';
+    }, false)
+
+    document.querySelector(".writeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        self.location = '/admin/add_book';
+    }, false)
+
+</script>
+</body>
+</html>

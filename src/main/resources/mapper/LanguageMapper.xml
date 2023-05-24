@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.silbaram.dao.LanguageDAO">
+
+    <select id="getLanguageById" parameterType="java.lang.Long" resultType="com.project.silbaram.vo.LanguageVO">
+        SELECT lgid, language
+        FROM language
+        WHERE lgid = #{lgid}
+    </select>
+
+    <select id="selectAll" resultType="com.project.silbaram.vo.LanguageVO">
+        SELECT * FROM `language`
+    </select>
+</mapper>

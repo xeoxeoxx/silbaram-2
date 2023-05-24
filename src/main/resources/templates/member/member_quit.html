@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 변경</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        div.hidden {
+            display: none;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<h1>비밀번호 변경</h1>
+<ul>
+    <li>
+        <a href="/index">홈</a>
+    </li>
+    <li th:if="${session.mid}">
+        <a href="/mypage/membermodify">회원정보 수정</a>
+    </li>
+    <li th:if="${session.mid}">
+        <a href="/mypage/mybooks">서재</a>
+    </li>
+</ul>
+
+<form th:action="@{/mypage/memberquit}"  th:object="${memberDTO}" method="post" name="frmPw">
+
+    <div>
+        <div>
+            <label for="password">기존 비밀번호:</label>
+            <input type="password" id="password" name="oldPassword" onchange="pwCheck()" maxlength="20 "required/>
+            <span id="pwValid"></span><br>
+            <label for="password2">비밀번호 재확인:</label>
+            <input type="password" id="password2" name="password2" onchange="pwCheck()" maxlength="20" required/>
+            <span id="pwSame"></span><br>
+        </div>
+        <div>
+            <button type="submit" class="quit-submit">회원탈퇴</button>
+        </div>
+    </div>
+
+</form >
+<script src="/js/signup.js"></script>
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector('.quit-submit').addEventListener('click', function () {
+            const msg = "[[${msg}]]";
+            if (msg !== null && msg !== "") {
+                alert(msg);
+            }
+            pwCheck();
+        })
+
+    })
+</script>
+
+
+</body>
+
+</html>

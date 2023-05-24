@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:inline="css" th:href="@{/css/cart.css}" rel="stylesheet">
+</head>
+<body>
+
+<div layout:fragment="Content" class="cart_box">
+    <form action="/silbaram/payment/cart_connect_pay" method="post">
+        <div class="cart_list">
+            <div class="button_area">
+                <input type="button" value="선택 삭제" class="delete-select-product">
+            </div>
+            <div class="cart_item" th:each="dto: ${dtoList}">
+                <div class="check_box"><input type="checkbox" name="selected_book" class="delete-select-check" th:value="${dto.lkid}"></div>
+                <div class="book_info">
+                    <p class="book_title">책 제목: [[${dto.name}]]</p>
+                    <p class="writer">작가: [[${dto.writer}]]</p>
+                    <p class="price">[[${dto.price}]]</p>
+                    <button class="delete-product" th:value="${dto.lkid}">Delete</button>
+                </div>
+                <input hidden="hidden" name="bkids[]" th:value="${dto.bookId}" />
+            </div>
+        </div>
+        <div class="order_area">
+            총 결제 금액:
+            <span class="total_price" th:text="${#session.getAttribute('totalPrice')}"></span>
+            <input type="hidden" class="cartList" name="amount" value="" /> <!-- 토스페이로 값 전달용. -->
+            <input type="submit" value="구매하기" class="go_payment">
+        </div>
+
+        <div class="order_select">
+            <p>결제 수단을 선택하세요 </p>
+            <label><input type="radio" name="method" value="카드"> 일반 결제</label> <br>
+            <label><input type="radio" name="method" value="가상계좌"> 가상 계좌 </label> <br>
+            <label><input type="radio" name="method" value="계좌이체" checked> 계좌 이체</label> <br>
+            <label><input type="radio" name="method" value="휴대폰"> 휴대폰 소액결제</label> <br>
+            <label><input type="radio" name="method" value="문화상품권"> 문화상품권</label> <br>
+        </div>
+        <!--    <input type="hidden" name="orderId" value="" class="orderId_input">-->
+        <!--    <input type="hidden" name="dtoList" th:value="${dtoList}">-->
+    </form>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const frmView = document.querySelector("form");
+
+    /* 카트 삭제 스크립트(delete버튼을 통한 삭제) */
+    const deleteBtns = document.querySelectorAll('.delete-product');
+    for (let i = 0; i < deleteBtns.length; i++) {
+        deleteBtns[i].addEventListener('click', function (e) {
+            frmView.innerHTML += `<input type="hidden" name="lkid" value="">`;
+            const target = e.target;
+            const lkid = target.getAttribute("value");
+            frmView.lkid.value = lkid;
+            frmView.action = '/silbaram/cart/deleteCart';
+            frmView.method = 'post';
+            frmView.submit();
+        });
+    }
+    /* // 카트 삭제 스크립트 */
+
+    /* 카트 다수 삭제 스크립트(선택삭제 버튼을 통한 삭제) */
+    const deteteCheckBox = document.querySelectorAll('.delete-select-check'); // 삭제용 선택 체크박스
+    document.querySelector(".delete-select-product").addEventListener('click', function (e) {
+        let inputsToRemove = null;
+
+        for (let i = 0; i < deteteCheckBox.length; i++) {
+            if (deteteCheckBox[i].checked) {
+                frmView.innerHTML += `<input type="hidden" name="lkids" value="`+ deteteCheckBox[i].value + `">`;
+            }
+        }
+        inputsToRemove = frmView.querySelectorAll('input[name="lkids"]');
+
+        if (inputsToRemove != null){
+            // frmView.lkids.value = lkids;
+            frmView.action = '/silbaram/cart/deleteCartList';
+            frmView.method = 'post';
+            frmView.submit();
+        }
+    })
+    /* // 카트 다수 삭제 스크립트 */
+
+
+</script>
+</body>
+</html>

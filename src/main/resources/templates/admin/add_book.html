@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책추가</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>책 등록</h1>
+<form th:action="@{/admin/add_book}" method="post">
+    <p>name: <input type="text" id="name" name="name" required /></p>
+    <p>writer: <input type="text" name="writer" required /></p>
+    <p>publisher: <input type="text" name="publisher" required /></p>
+    <p>price: <input type="text" name="price" required /></p>
+    <p>synopsis: <input type="text" name="synopsis" required /></p>
+    <p>pages: <input type="text" name="pages" required></p>
+    <p>isbn: <input type="text" name="isbnNum" required /></p>
+    <p>category:
+        <select name="cid">
+            <option value="100">소설/장르문학</option>
+            <option value="101">예술/대중문화</option>
+            <option value="102">에세이/시</option>
+            <option value="103">만화/그래픽노블</option>
+            <option value="104">외국어</option>
+            <option value="105">경영/경제</option>
+            <option value="106">역사/법</option>
+            <option value="107">정치/사회과학</option>
+            <option value="108">컴퓨터/인터넷/기술</option>
+            <option value="109">자연과학</option>
+            <option value="110">종교</option>
+            <option value="111">어린이/청소년</option>
+            <option value="112">가정/생활</option>
+            <option value="113">건강/스포츠</option>
+            <option value="114">자기계발</option>
+            <option value="115">해외도서/잡지</option>
+        </select>
+    </p>
+    <p>fileSize: <input type="file" name="fileSize" /></p>
+    <p>language:
+        <select name="lgid">
+            <option value="207">한국어</option>
+            <option value="201">영어</option>
+            <option value="202">일본어</option>
+            <option value="203">중국어</option>
+            <option value="204">스페인어</option>
+            <option value="205">프랑스어</option>
+            <option value="206">아랍어</option>
+        </select>
+    </p>
+    <p>voiceLength: <input type="text" name="voiceLength" /></p>
+    <p>bookUrl: <input type="text" name="bookUrl" /></p>
+    <p><button type="submit">등록</button></p>
+</form>
+
+</body>
+</html>

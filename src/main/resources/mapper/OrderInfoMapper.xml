@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.silbaram.dao.OrderInfoDAO">
+
+    <!-- 상세 정보(주문자가 보내는 정보) -->
+    <insert id="insertOrderInfo">
+        <!-- INSERT INTO `orderInfo` (`bookId`, `bookName`, `bookPrice`, `orderNum`, `oid`, `memberId`, `status`)
+        VALUES (#{bookId}, #{bookName}, #{bookPrice}, #{orderNum}, #{oid}, #{memberId}, #{status}); -->
+
+        INSERT INTO orderInfo (bookId, bookName, bookPrice, memberId, orderNum, oid)
+        SELECT b.bkid, b.name, b.price, #{memberId}, #{orderNum}, #{oid}
+        FROM book AS b
+        WHERE b.bkid = #{bookId};
+
+    </insert>
+
+    <select id="selectOid" resultType="Long">
+        SELECT oid FROM orderList WHERE orderNum = #{orderNum}
+    </select>
+
+    <!-- 가격 총합이 맞는지 구하기 -->
+    <select id="getPriceSum" resultType="int">
+        SELECT SUM() from orderInfo WHERE orderNum = #{orderNum};
+    </select>
+
+</mapper>

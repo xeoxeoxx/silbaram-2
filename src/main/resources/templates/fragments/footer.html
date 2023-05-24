@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="FooterFragment">
+    <!--Footer Fragment -->
+
+    <div class="footer">
+        <div id="footer_left">
+            <div>
+                <div class="footer_icon"><img th:src="@{/resources/customer-support.png}"></div>
+                <a href="#">고객센터</a>
+            </div>
+            <div>
+                <div class="footer_icon"><img th:src="@{/resources/board.png}"></div>
+                <a href="#">공지사항</a>
+            </div>
+            <div>
+                <div class="footer_icon"><img th:src="@{/resources/customer-support.png}"></div>
+                <a href="#">인재채용</a>
+            </div>
+        </div>
+
+        <div id="footer_middle">
+            <div>
+                <p>사업자 정보</p>
+                <ul>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">청소년보호정책</a></li>
+                    <li><a href="#">사업자 정보 확인</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <p>기타 문의</p>
+                <ul>
+                    <li><a href="#">콘텐츠 제공 문의</a></li>
+                    <li><a href="#">사업 제휴 문의</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <p>회사 소개</p>
+                <ul>
+                    <li><a href="#">회사 소개</a></li>
+                    <li><a href="#">인재채용</a></li>
+                </ul>
+            </div>
+
+
+
+        </div>
+
+        <div id="footer_right">
+            <p>SNS</p>
+            <div class="icon_box">
+                <div><a href="#"><img th:src="@{/resources/facebook.png}"></a></div>
+                <div><a href="#"><img th:src="@{/resources/instagram.png}"></a></div>
+                <div><a href="#"><img th:src="@{/resources/youtube.png}"></a></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</html>

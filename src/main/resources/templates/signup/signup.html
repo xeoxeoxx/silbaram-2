@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link th:inline="css" th:href="@{/css/signup.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
+    <script src="/js/signup.js"></script>
+</head>
+<body>
+<h1>회원가입</h1>
+
+<div layout:fragment="Content">
+    <div id="contentBox">
+        <form th:action="@{/templates/signup}" method="post" id="signupBox" name="frmMemberInsert">
+            <input type="hidden" name="email">
+            <div>
+                <label for="userId">아이디:</label>
+                <input type="text" id="userId" name="userId" required/>
+                <button type="button" onclick="checkId()">중복확인</button>
+                <span class="idCheck"></span>
+            </div>
+            <div>
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="password" onchange="pwCheck()" required/>
+                <span id="pwValid"></span>
+            </div>
+            <div>
+                <label for="password" id="dummy">비밀번호 재확인:</label>
+                <input type="password" id="password2" name="password2" onchange="pwCheck()" required/>
+                <span id="pwSame"></span><br>
+            </div>
+
+            <div>
+                <label for="nickName">닉네임:</label>
+                <input type="text" id="nickName" name="nickName" required/>
+                <button type="button" onclick="checkNickName()">중복확인</button>
+                <span class="nickNameCheck"></span>
+            </div>
+            <div>
+                <label for="name">이름:</label>
+                <input type="text" id="name" name="name" required/>
+            </div>
+            <div>
+                <label for="birthDate">생년월일:</label>
+                <input type="date" id="birthDate" name="birthDate" required/>
+            </div>
+            <div>
+                <label>성별:</label>
+                <input type="radio" name="gender" id="genderM" value="M" required/><span>남성</span>
+                <input type="radio" name="gender" id="genderF" value="F" required/><span>여성</span>
+            </div>
+            <div>
+                <div>
+                    <label for="email1">이메일:</label>
+                    <input type="text" id="email1" name="email1" required/>
+                    <span>@</span>
+                    <select id="email2" name="email2" onchange="addDomain()">
+                        <option value="">도메인 선택</option>
+                        <option value="@naver.com">@naver.com</option>
+                        <option value="@gmail.com">@gmail.com</option>
+                        <option value="@daum.net">@daum.net</option>
+                        <option value="@hotmail.com">@hotmail.com</option>
+                        <option value="@icloud.com">@icloud.com</option>
+                    </select>
+                    <button type="button" id="mail-Check-Btn">이메일 인증</button>
+                </div>
+                <div>
+                    <input class="mail-check-input" placeholder="인증번호 6자리를 입력해주세요." disabled="disabled" maxlength="6">
+                    <span id="mail-check-warn"></span>
+                </div>
+
+            </div>
+            <div>
+                <label for="phoneNumber">(선택) 전화번호:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" required/>
+            </div>
+            <div>
+                <label for="zipcode">(선택) 우편번호:</label>
+                <input id="zipcode" name="zipcode" type="text" class="form-control" placeholder="zipcode" readonly>
+                <input type="button" value="우편번호 검색" onclick="execDaumPostcode();">
+            </div>
+            <div class="form-group row">
+                <label for="address1">주소1</label>
+                <input name="address1" id="address1" type="text" readonly>
+            </div>
+            <div class="form-group row">
+                <label for="address2">주소2</label>
+                <input name="address2" id="address2" type="text">
+            </div>
+            <div>
+                <button type="submit" class="btn-submit">회원가입</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+
+
+
+
+</body>
+</html>

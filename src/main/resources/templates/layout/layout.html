@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <head>
+    <title>Layout</title>
+    <script th:inline="javascript" type="text/javascript" th:src="@{/js/jquery-3.6.4.min.js}"></script>
+  </head>
+
+<body>
+<!--Header 영역을 참조합니다.-->
+<header th:replace="fragments/header :: HeaderFragment"></header>
+
+<th:block layout:fragment="nav">
+
+</th:block>
+
+<!--Content 내용 영역을 참조합니다-->
+<th:block layout:fragment="Content">
+  <p>Content Tab goes Here</p>
+</th:block>
+
+<!--Footer 영역을 참조합니다.-->
+<footer th:replace="fragments/footer :: FooterFragment"></footer>
+
+<th:block layout:fragment="script">
+
+</th:block>
+
+<!--Common JS-->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/jquery-3.6.4.min.js}"></script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/script.js}"></script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/signup.js}"></script>
+<script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+<link th:inline="css" th:href="@{/css/style.css}" rel="stylesheet"/>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/green-audio-player.min.js}"></script>
+
+</body>
+</html>

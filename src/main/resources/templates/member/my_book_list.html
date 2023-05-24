@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}"
+lang="en">
+<head>
+    <title>E-book 서재</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS 파일 링크 -->
+    <link th:inline="css" th:href="@{/css/mybookList.css}" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="Content" >
+    <div class="mybookListBox">
+
+        <h3>내 서재</h3>
+
+        <form action="/mypage/mybooks" method="get">
+            <input type="hidden" name="sortType" value="recent">
+            <div>
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <div class="mybookSearch">
+                    <select id="searchType" name="types">
+                        <option value="n" th:selected="${pageRequestDTO.types == 'n'}">제목</option>
+                        <option value="w" th:selected="${pageRequestDTO.types == 'w'}">작가</option>
+                        <option value="nw" th:selected="${pageRequestDTO.types == 'nw'}">제목+작가</option>
+                    </select>
+                    <input type="text" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div>
+                        <button type="submit">Search</button>
+                        <button type="button" id="clearBtn">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- 정렬 버튼과 리스트 -->
+        <button id="latest-btn" class="btn">최신순</button>
+        <button id="alpha-btn" class="btn">가나다순</button>
+
+        <div class="mybooks">
+            <div id="list">
+                <div th:with="link = ${pageRequestDTO.getLink()}">
+                    <div th:each="dto : ${responseDTO.dtoList}">
+                        <div class="bookImage">
+
+                        </div>
+                        <div class="bookData">
+                            <p th:text="${dto.bookName}"></p>
+                            <p th:text="${dto.writerName}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--페이지 버튼-->
+                <div class="pageBox">
+                    <ul class="pagination_booklist">
+                        <div th:if="${responseDTO.total > 0}">
+                            <li class="page-item" th:if="${responseDTO.prev}">
+                                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                            </li>
+                            <!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+                            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                    <!--data-num이라는 속성으로 페이지 처리-->
+                                </li>
+                            </th:block>
+                            <li class="page-item" th:if="${responseDTO.next}">
+                                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script layout:fragment="script" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URL(location.href).searchParams;
+            const el = document.getElementById('searchType');
+            const len = el.options.length;
+
+            if (urlParams.get('types') !== null) {
+                const str = urlParams.get('types');
+                console.log(str)
+                for (let i = 0; i < len; i++) {
+                    //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                    if (el.options[i].value == str) {
+                        el.options[i].selected = true;
+                    }
+                }
+            } else {
+                el.options[0].selected = true;
+            }
+
+            const formSearch = document.querySelector("form");
+            const latestBtn = document.querySelector("#latest-btn");
+            const alphaBtn = document.querySelector("#alpha-btn");
+            latestBtn.addEventListener("click", function () {
+                formSearch.sortType.value="recent"
+                formSearch.submit();
+            })
+            alphaBtn.addEventListener("click", function () {
+                formSearch.sortType.value="spell"
+                formSearch.submit();
+            })
+
+
+        });
+
+        document.querySelector(".pagination_booklist").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const target = e.target;
+
+            if (target.tagName !== 'A') {
+                return;
+            }
+
+            const num = target.getAttribute("data-num");
+            const formObj = document.querySelector("form");
+            console.log(num, formObj);
+
+            formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
+            formObj.submit();
+
+        }, false)
+
+        document.getElementById('clearBtn').addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            self.location = '/mypage/mybooks';
+        }, false)
+
+    </script>
+
+</div>
+
+
+
+</body>
+</html>

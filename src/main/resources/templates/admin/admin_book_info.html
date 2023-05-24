@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Book Detailed Page</title>
+</head>
+<body>
+
+<div layout:fragment="Content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Book Detailed Page
+                </div>
+                <div class="card-body">
+                    <form action="/admin/add_book" method="post">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Bkid</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.bkid}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.name}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Writer</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.writer}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Publisher</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.publisher}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Price</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.price}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Sysnopsis</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.synopsis}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Pages</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.pages}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">IsbnNum</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.isbnNum}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">cateName</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.categoryVO.cateName}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">publisher</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.publisher}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">FileSize</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.fileSize}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Language</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.languageVO.language}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">VoiceLength</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.voiceLength}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">BookUrl</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.bookUrl}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">BookTextUrl</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.bookTextUrl}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">BookImage</span>
+                            <input type="text" class="form-control"
+                                   th:value="${dto.bookImage}" readonly>
+                        </div>
+
+
+                        <div class="my-4">
+                            <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
+                                <a th:href="|@{/admin/admin_book_list}?${link}|" class="text-decoration-none">
+                                    <button type="button" class="btn btn-primary">List</button>
+                                </a>
+
+
+                                <a th:href="|@{/admin/modify_book(bkid=${dto.bkid})}&${link}|" class="text-decoration-none">
+                                    <button type="button" class="btn btn-secondary">Modify</button>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+
+</body>
+</html>

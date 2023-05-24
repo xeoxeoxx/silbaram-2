@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>ID 찾기 결과</title>
+    <link th:inline="css" th:href="@{/css/find.css}" rel="stylesheet">
+</head>
+<body>
+
+<div layout:fragment="Content" class="content_box">
+    <h3>ID 찾기 결과</h3>
+
+    <div>
+        <p>회원님의 아이디는 <strong th:text="${userId}"></strong>입니다.</p>
+        <!-- Replace ${id} with the actual ID retrieved -->
+    </div>
+
+    <a th:href="@{/login}">로그인 페이지로 이동</a> <!-- Replace "/login" with the appropriate URL -->
+
+</div>
+
+</body>
+</html>

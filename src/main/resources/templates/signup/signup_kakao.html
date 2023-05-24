@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
+  <script src="/js/signup.js"></script>
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/signupkakao}" method="post" name="frmMemberInsert">
+  <input type="hidden" name="password" id="password" th:value="'kakao123!'" readonly>
+  <input type="hidden" name="userId" id="userId" th:value="'ka_'+${session.userId}" readonly>
+  <input type="hidden" name="socialLogin" th:value="'kakao'" readonly>
+
+  <div>
+    <label for="nickName">카카오이메일:</label>
+    <input type="text" name="email" th:value="${session.email}" readonly>
+  </div>
+  <div>
+    <label for="nickName">닉네임:</label>
+    <input type="text" id="nickName" name="nickName" onkeyup="filterKorEngNum(this)" maxlength="15" required/>
+    <button type="button" onclick="checkNickName()">중복확인</button>
+    <span class="nickNameCheck"></span>
+  </div>
+  <script>
+    function filterKorEngNum(input) {
+      input.value = input.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]/g, '');
+    }
+  </script>
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" maxlength="20"required/>
+  </div>
+  <div>
+    <label for="birthDate">생년월일:</label>
+    <input type="date" id="birthDate" name="birthDate" required/>
+  </div>
+  <div>
+    <label>성별:</label>
+    <input type="radio" name="gender" id="genderM" value="M" required/><span>남성</span>
+    <input type="radio" name="gender" id="genderF" value="F" required/><span>여성</span>
+  </div>
+  <div>
+    <label for="phoneNumber">(선택)전화번호:</label>
+    <input type="tel" id="phoneNumber" name="phoneNumber"/>
+  </div>
+  <div>
+    <label for="zipcode">(선택)우편번호:</label>
+    <input id="zipcode" name="zipcode" type="text" class="form-control" placeholder="zipcode" readonly>
+    <input type="button" value="우편번호 검색" onclick="execDaumPostcode();">
+  </div>
+  <div class="form-group row">
+    <label for="address1">주소1</label>
+    <input name="address1" id="address1" type="text" readonly>
+  </div>
+  <div class="form-group row">
+    <label for="address2">주소2</label>
+    <input name="address2" id="address2" type="text"  maxlength="100">
+  </div>
+  <div>회원가입 약관동의 (필수)</div>
+  <div style="border:1px solid; height:120px; overflow-y:scroll;">
+  </div>
+
+  <input type="checkbox">
+  <div>
+    <button type="submit" class="btn-submit">회원가입</button>
+  </div>
+
+</form>
+</body>
+</html>

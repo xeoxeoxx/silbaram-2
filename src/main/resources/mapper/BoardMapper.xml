@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.silbaram.dao.BoardDAO">
+
+    <select id="getNow" resultType="string">
+        select now()
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `board` (`title`, `content`, `memberId`, `pageType`, `regDate`)
+        VALUES (#{title}, #{content}, #{memberId}, #{pageType}, now())
+    </insert>
+
+    <select id="selectAll" resultType="com.project.silbaram.vo.BoardVO">
+        SELECT *
+        FROM `board` b
+        join `member` m on b.memberId = m.mid
+    </select>
+
+    <select id="selectOne" resultType="com.project.silbaram.vo.BoardVO">
+        SELECT *
+        FROM `board` b
+                 join `member` m on b.memberId = m.mid
+        WHERE b.bdid = #{bdid}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM `board`
+        WHERE `bdid` = #{bdid}
+    </delete>
+
+    <update id="update">
+        UPDATE `board`
+        SET `title`   = #{title},
+            `content` = #{content}
+        WHERE `bdid` = #{bdid}
+    </update>
+
+
+    <sql id="search">
+        <where>
+            b.pageType = #{pageType}
+            <if test="types != null and types.length > 0">
+                and
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR">
+                    <if test="type == 't'.toString()">
+                        b.title like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        m.nickname like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'c'.toString()">
+                        b.content like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'tc'.toString()">
+                        b.content like concat('%', #{keyword}, '%')
+                        or
+                        b.title like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'tcw'.toString()">
+                        b.content like concat('%', #{keyword}, '%')
+                        or
+                        b.title like concat('%', #{keyword}, '%')
+                        or
+                        m.nickname like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'id'.toString()">
+                        m.mid like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="list" resultType="com.project.silbaram.vo.BoardVO">
+        select b.*, m.nickname from `board` b
+        left join `member` m on b.memberId = m.mid
+        <include refid="search"></include>
+        ORDER BY b.bdid DESC limit #{skip}, #{size}
+    </select>
+    <!--mybatis는 getXXX, setXXX을 통해서 동작하기때문에 skip은 getSkip()을 호출-->
+
+    <select id="getCount" resultType="int">
+        select count(b.bdid)
+        from board b
+        left join `member` m on b.memberId = m.mid
+        <include refid="search"></include>
+    </select>
+
+
+    <!--내가 쓴 게시글-->
+
+    <select id="myBoardList" resultType="com.project.silbaram.vo.BoardVO">
+        SELECT b.*
+        FROM `board` b
+        LEFT JOIN `member` m ON b.memberId = m.mid
+        WHERE m.mid = #{mid} and b.pageType = #{pageType}
+        ORDER BY b.bdid DESC
+        LIMIT #{skip}, #{size}
+    </select>
+
+    <select id="getCountByMid" resultType="int">
+        SELECT COUNT(b.bdid)
+        FROM board b
+        LEFT JOIN `member` m ON b.memberId = m.mid
+        WHERE m.mid = #{mid}
+    </select>
+
+    <!--admin-->
+
+    <resultMap id="boardResultMap" type="com.project.silbaram.vo.BoardVO">
+        <id column="bdid" property="bdid" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="memberId" property="memberId" />
+        <result column="regDate" property="regDate" />
+        <result column="pageType" property="pageType" />
+
+        <association property="member" javaType="com.project.silbaram.vo.MemberVO">
+            <id property="mid" column="mid" />
+            <result property="userId" column="userId" />
+        </association>
+    </resultMap>
+
+    <select id="listAll" resultMap="boardResultMap" resultType="com.project.silbaram.vo.BoardVO">
+        SELECT b.bdid, b.title, b.content, m.userId, b.regDate, b.pageType
+        FROM board b
+        INNER JOIN member m ON b.memberId = m.mid
+        <include refid="search"></include>
+        order by b.bdid desc limit #{skip, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+    </select>
+
+
+</mapper>

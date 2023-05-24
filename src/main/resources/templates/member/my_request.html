@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<meta charset="UTF-8">
+	<title>내가 쓴 책 요청 글</title>
+	<link th:inline="css" th:href="@{/css/myBoards.css}" rel="stylesheet">
+</head>
+<body>
+
+<div layout:fragment="Content" class="modify_box">
+		<h5 class="card-title">내가 쓴 요청글</h5>
+		<div th:if="${responseDTO.total == 0}" class="nothing">
+			<p>작성한 요청글이 없습니다</p>
+			<a href="#">자주 묻는 요청글 확인하기 >> </a>
+		</div>
+		<div th:if="${responseDTO.total>0}" class="something">
+			<span>현재까지 작성하신 책 요청은 총 : </span><span th:text="${responseDTO.total}+권"></span>
+			<span>입니다</span>
+			<table class="table">
+				<thead>
+				<tr>
+					<th scope="col">요청도서</th>
+					<th scope="col">작성일자</th>
+				</tr>
+				</thead>
+				
+				<tr th:each="dto:${responseDTO.dtoList}">
+					<td>[[${dto.content}]]</td>
+					<td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd')}]]</td>
+					<td th:if="${#strings.equals(session.mid, dto.memberId)}">
+						<a th:href="@{/board/remove_my_request(bdid=${dto.bdid})}">삭제</a></td>
+				</tr>
+				</tbody>
+			</table>
+			<!--페이지 버튼-->
+			<div>
+				<ul class="myRequestPagination pagination_numbers">
+					<li class="page-item" th:if="${responseDTO.prev}">
+						<a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+					</li>
+					<!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+					<th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+						<li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+							<a class="page-link" th:data-num="${i}">[[${i}]]</a>
+							<!--data-num이라는 속성으로 페이지 처리-->
+						</li>
+					</th:block>
+					<li class="page-item" th:if="${responseDTO.next}">
+						<a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+					</li>
+				</ul>
+			</div>
+	</div>
+	<script layout:fragment="script" th:inline="javascript">
+		document.querySelector(".myRequestPagination").addEventListener("click", function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			const target = e.target;
+			
+			if (target.tagName !== 'A') {
+				return;
+			}
+			
+			const num = target.getAttribute("data-num");
+			console.log(num)
+			console.log('/member/my_request?page=' + num)
+			window.location.href = '/member/my_request?page=' + num
+			
+		}, false)
+	</script>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+*{
+    box-sizing: border-box;
+}
+
+.cart_box button{
+    -webkit-appearance: none;
+    border: 1px solid #BBB;
+    background-color: white;
+    display: block;
+    width: 60px;
+    height: 30px;
+    border-radius: 10px;
+    color: #777;
+    margin-top: 10px;
+    margin-right: 30px;
+    float: right;
+}
+
+.cart_box{
+    margin-bottom: 70px;
+}
+
+.cart_form {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+    background-color: #E0F5F2;
+    border: none;
+    margin-top: 70px;
+
+}
+
+.cart_form .cart_list {
+    float: left;
+    width: 60%;
+    height: 100%;
+    background-color: #fff;
+    overflow: auto;
+    margin-bottom: 70px;
+    margin-right: 20px;
+}
+
+.cart_list .button_area input{
+    -webkit-appearance: none;
+    border: 1px solid #BBB;
+    background-color: white;
+    display: block;
+    width: 80px;
+    height: 40px;
+    border-radius: 15px;
+    color: #777;
+}
+
+.cart_form .cart_list .list_wrap{
+    margin-top: 10px;
+    border: 1px solid #BBB;
+}
+
+.cart_form .cart_list .cart_item {
+    height: 150px;
+    background-color: #E0F5F2;
+}
+
+.cart_item .check_box {
+    float: left;
+    width: 15%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 15px;
+}
+
+.cart_item .book_info {
+    float: left;
+    width: 85%;
+    height: 100%;
+    background-color: white;
+    padding-left: 15px;
+    padding-top: 15px;
+}
+
+.order_area{
+    float: right;
+    width: 35%;
+    border: 1.5px solid #50CDBB;
+    margin-top: 50px;
+    padding: 15px;
+}
+
+.order_area input{
+    -webkit-appearance: none;
+    border: 1px solid #BBB;
+    background-color: white;
+    display: block;
+    width: 80px;
+    height: 40px;
+    border-radius: 15px;
+    color: #777;
+    margin-top: 15px;
+    float:right;
+}
+
+.order_area .total_price{
+    color: #444;
+}
+
+.order_area p{
+    font-size: 16px;
+    color: #444;
+}
+
+.order_area p span{
+    color: #50CDBB;
+    font-size: 18px;
+}
+

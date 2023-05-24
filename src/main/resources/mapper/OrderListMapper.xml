@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.project.silbaram.dao.OrderListDAO">
+
+    <!-- 주문 목록 표시용 -->
+    <insert id="insertOrderList">
+        INSERT INTO `orderList` (`memberID`, `totalPrice`, `orderNum`, `payBy`, `status`, `orderName`)
+        VALUES (#{memberID}, #{totalPrice}, #{orderNum}, #{payBy}, #{status}, #{orderName});
+    </insert>
+
+    <select id="selectList" resultType="com.project.silbaram.vo.OrderListVO">
+        SELECT * FROM OrderList
+        <if test="pageRequestDTO.types != null">
+            <foreach item="type" index="index" collection="pageRequestDTO.types" open="" separator=" OR " close="">
+                <if test="type == 'd'.toString()">
+                    ORDER BY orderDate DESC
+                </if>
+                <if test="type == 't'.toString()">
+                    ORDER BY orderName ASC
+                </if>
+            </foreach>
+        </if>
+        LIMIT #{pageRequestDTO.skip}, #{pageRequestDTO.size}
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(oid) from orderlist where memberId = #{memberId};
+    </select>
+    <!-- // 주문 목록 표시용 -->
+
+    <!-- 주문번호와 가격 총합에 대한 일치 여부 설정 -->
+    <update id="updateOrderListStatus">
+
+        UPDATE orderList AS ol
+            INNER JOIN (
+            SELECT oi.orderNum, SUM(oi.bookPrice) AS totalBookPrice
+            FROM orderInfo AS oi
+            WHERE oi.orderNum = #{orderNum}
+            GROUP BY oi.orderNum
+            ) AS oi ON ol.orderNum = oi.orderNum
+            SET ol.status = CASE
+                WHEN ol.memberId = #{memberId} AND ol.totalPrice = oi.totalBookPrice THEN TRUE
+                ELSE FALSE
+        END
+
+    </update>
+
+    <!-- 주문번호와 가격 총합에 대한 일치 여부 출력 -->
+    <select id="selectOrderListStatus" resultType="boolean">
+        SELECT status FROM orderList WHERE memberId = #{memberId} AND orderNum = #{orderNum}
+    </select>
+
+</mapper>

@@ -1,0 +1,100 @@
+@charset "utf-8";
+/*#8e6a55 #abad71 #8ea594 #495e4d*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap');
+
+
+*{
+    box-sizing: border-box;
+}
+
+#contentBox{
+    height: 580px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#loginBox{
+    width: 800px;
+    height: 500px;
+    margin: 0 auto;
+    border: 1.5px solid #50CDBB;
+    border-radius: 15px;
+    display: flex;
+    box-shadow: 3px 3px 5px #93CAC2;
+}
+
+#imgBox{
+    height: 100%;
+    width: 50%;
+    background-color: #50CDBB;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+#loginForm{
+    height: 100%;
+    width: 50%;
+    padding: 40px;
+}
+
+#loginForm div{
+    display: flex;
+    flex-direction: column;
+}
+
+#loginForm div label{
+    color: #777;
+}
+
+#loginForm div input{
+    -webkit-appearance: none;
+    border:none;
+    background-color: #E0F5F2;
+    display: block;
+    height: 35px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.kakao{
+    -webkit-appearance: none;
+    border: 1px solid #777;
+    border-radius: 15px;
+    background-color: white;
+    display: block;
+    height: 45px;
+    width: 100%;
+}
+
+#loginForm div:nth-child(4) input{
+    -webkit-appearance: checkbox;
+}
+
+#loginForm div:nth-child(5){
+    flex-direction: row;
+    justify-content: end;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+#loginForm div > a{
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+    margin-right: 7px;
+}
+
+.login{
+    -webkit-appearance: none;
+    height: 50px;
+    border: 1px solid #50CDBB;
+    background-color: #50CDBB;
+    border-radius: 25px;
+    color: white;
+    font-weight: 700;
+    margin-top: 50px;
+}

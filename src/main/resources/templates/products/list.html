@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<link th:inline="css" th:href="@{/css/booklist.css}" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div layout:fragment="nav">
+	<div th:replace="fragments/nav" :: NavFragment></div>
+</div>
+
+<div layout:fragment="Content">
+	<div id="book_content">
+		<h3 th:text="${category}"></h3>
+
+		<div th:if="${pageRequestDTO.keyword}">
+			<span th:text="'\''+${pageRequestDTO.keyword}+'\' 검색결과'"></span>
+		</div>
+		<button onclick="location.href='/products/list'" type="button" id="reset">조건 초기화</button>
+
+		<fieldset>
+			<div id="results">
+				<span th:text="'전체: '+${responseDTO.total}+'건 | '"></span>
+				<span th:text="'도서 검색결과: '+${bookTotal}+'건 | '"></span>
+				<span th:text="'작가 검색결과: '+${writerTotal}+'건'"></span>
+			</div>
+		</fieldset>
+
+		<fieldset th:if="${categoryCnt != null}">
+			카테고리 필터
+			<ul>
+				<li th:each="dto:${categoryCnt}">
+					<a onclick="goCategory(event)" th:class="${dto.cid}">
+						[[${dto.cateName}]]([[${dto.cnt}]])</a></li>
+			</ul>
+		</fieldset>
+		<div class="listWrap">
+			<div th:if="${responseDTO.total == 0}">
+				데이터 없음
+				<button onclick="goRequestBtn()">찾는 책이 없으신가요?</button>
+
+			</div>
+
+			<div th:if="${responseDTO.total>0}">
+				<div id="content_container">
+					<fieldset th:each="dto:${responseDTO.dtoList}">
+						<div onclick="goDetails(event, this)" th:class="${dto.bkid}" id="bookdata">
+							<div th:class="${dto.bkid}" id="imgBlock"><img th:src="${bookImageFileName}" alt="책 이미지 - 여기에 src을 넣어야 함 ">
+							</div>
+							<!--   <div>[[${dto.bkid}]]</div> -->
+							<div id="txtBlock">
+								<div th:class="${dto.bkid}">[[${dto.name}]]</div>
+								<div th:class="${dto.bkid}">[[${dto.writer}]] | [[${dto.publisher}]]</div>
+								<div th:class="${dto.bkid}">[[${dto.synopsis}]]</div>
+								<div th:class="${dto.bkid}"><span>[[${dto.price}]]</span>원</div>
+							</div>
+
+							<div id="buttons">
+								<button>카트에 담기</button>
+								<button>구매하기</button>
+							</div>
+
+						</div>
+					</fieldset>
+				</div>
+
+
+				<div th:if="${responseDTO.total > 10 }" id="infiniteScroll">
+					<button id="changeScrollBtn" onclick="changeScrollV(event)">페이지 구분 없이 스크롤하기</button>
+				</div>
+				<!--페이지 버튼 -->
+				<div th:if="${responseDTO.total > 0 }" id="paginationBox">
+					<div id="page_wrap">
+						<ul class="pagination">
+							<li th:if="${responseDTO.prev}">
+								<a th:data-num="${responseDTO.start - 1}">Previous</a>
+							</li>
+
+							<th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+								<li>
+									<a th:data-num="${i}">[[${i}]]</a>
+								</li>
+							</th:block>
+							<li th:if="${responseDTO.next}">
+								<a th:data-num="${responseDTO.end + 1}">Next</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div id="end">
+					<button onclick="goRequestBtn()">찾는 책이 없으신가요? >> </button>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+
+
+<script layout:fragment="script" th:inline="javascript">
+	 let page = 2;
+
+	function goDetails(e, bid) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		let bkid = e.target.className
+		if (bkid == null || bkid == undefined || bkid.length == 0) {
+			bkid = bid
+		}
+
+		location.href = `/products/detail?bkid=${bkid}`
+	}
+
+	function infinityScroll() {
+		console.log("!")
+		let urlParams = new URL(location.href).searchParams;
+		let p = page.toString()
+		let url = '/products/list_ajax'
+		url += '?page=' + p;
+		if (urlParams.has('cid')) {
+			url += "&cid=" + urlParams.get('cid')
+		}
+		if (urlParams.has('types')) {
+			url += "&types=" + urlParams.get('types')
+		}
+		if (urlParams.has('keyword')) {
+			url += "&keyword=" + urlParams.get('keyword')
+		}
+
+		console.log(urlParams.get('types'))
+		//console.log(mark)
+		if (mark) {
+			$.ajax({
+				type: 'get',
+				url: url,
+				success: function (data) {
+					page++;
+					let res = data.responseDTO
+					console.log(res.total)
+					console.log(res.page, res.size)
+					let content = ""
+					//console.log(data)
+					let list = data.responseDTO.dtoList
+
+					console.log(list)
+					for (let i = 0; i < list.length; i++) {
+						let dto = list[i];
+						content += "<fieldset><div onClick='goDetails(event, " + dto.bkid + ")' ";
+						content += " className='" + dto.bkid + "' id='bookdata'" +"'>";
+						content += "<div id='imgBlock' className='" + dto.bkid + "'><img src='/google/image/" + dto.name + "_cover.jpg' alt='책 이미지'></div>";
+						content += "<div id='txtBlock'>";
+						content += "<div className='" + dto.bkid + "'>" + dto.name + "</div>";
+						content += "<div className='" + dto.bkid + "'>" + dto.writer + " | " + dto.publisher + "</div>";
+						content += "<div className='" + dto.bkid + "'>" + dto.synopsis + "</div>";
+						content += "<div className='" + dto.bkid + "'>" + dto.price + "원" + "</div>";
+						content += "</div>";
+						content += "<div id='buttons'>" + "<button>카트에 담기</button><button>구매하기</button>" + "</div>";
+						content += "</div></fieldset>";
+
+					}
+
+
+				document.getElementById('content_container').innerHTML += content;
+
+					console.log(res.total)
+					console.log(res.page, res.size)
+					console.log(page)
+					if (res.total <= (res.page * res.size)) {
+						mark = false;
+						document.getElementById('end').style.display = 'block'
+					}
+
+				}, error: function (e) {
+					console.log(e)
+				}
+			});
+		}
+
+
+	}
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.silbaram.dao.CartDAO">
+
+    <!-- 카트에 상품 추가 -->
+    <insert id="insertCart">
+        INSERT INTO cart (memberId, bookId) VALUES (#{memberId}, #{bookId});
+    </insert>
+
+    <!-- 카트 중복 체크 -->
+    <select id="insertCartCheck" resultType="int">
+        select count(*) from cart where bookId = #{bookId} and memberId = #{memberId};
+    </select>
+
+    <!-- 중복 체크 된 카트 아이템 번호 가져오기 -->
+    <select id="selectCartOne" resultType="Long">
+        SELECT lkid FROM cart WHERE bookId = #{bookId} and memberId = #{memberId};
+    </select>
+
+    <!-- 카트 리스트 불러오기 -->
+    <select id="selectAll" resultType="com.project.silbaram.vo.CartVO">
+        SELECT * from cart LEFT OUTER JOIN book on (cart.bookId = book.bkid) WHERE memberId = #{memberId};
+    </select>
+
+    <!-- 카트 1개 삭제 -->
+    <select id="delete">
+        DELETE from cart where lkid = #{lkid}
+    </select>
+
+    <!-- 카트 여러개 삭제 (deleteListSelect 포함)  -->
+    <select id="deleteCartList">
+        <if test="array != null and array.length > 0">
+            delete from cart
+            <include refid="deleteListSelect"/>
+        </if>
+    </select>
+
+    <sql id="deleteListSelect">
+        <where>
+            <foreach collection="lkids" item="lkid" open="(" close=")" separator=" OR ">
+                lkid = #{lkid}
+            </foreach>
+        </where>
+    </sql>
+
+
+</mapper>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<meta charset="UTF-8">
+	<title>QnA Board Read</title>
+</head>
+<body>
+
+<div layout:fragment="Content">
+	<div>
+		<div>
+			QnA Board Read
+		</div>
+		<div>
+			<form action="/silbaram/board/add_qna" method="post">
+				<div>
+					<span>Bdid</span>
+					<input type="text" th:value="${dto.bdid}" readonly>
+				</div>
+				<div>
+					<span>Title</span>
+					<input type="text" th:value="${dto.title}" readonly>
+				</div>
+				<div>
+					<span>Content</span>
+					<textarea readonly>[[${dto.content}]]</textarea>
+				</div>
+				<div>
+					<span>Nickname</span>
+					<input type="text" th:value="${dto.nickname}" readonly>
+				</div>
+				
+				<div>
+					<span>RegDate</span>
+					<input type="text" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}"
+						   readonly>
+				</div>
+				
+				<div>
+					<div th:with="link = ${pageRequestDTO.getLink()}">
+						<a th:href="|@{/templates/board/list_qna}?${link}|" class="text-decoration-none">
+							<button type="button">List</button>
+						</a>
+						
+						<a th:if="${#strings.equals(session.mid, dto.memberId)}"
+						   th:href="|@{/templates/board/modify_qna(bdid=${dto.bdid})}&${link}|"
+						   class="text-decoration-none">
+							<button type="button">Modify</button>
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+<head>
+	<meta charset="UTF-8">
+	<link th:inline="css" th:href="@{/css/myBoards.css}" rel="stylesheet">
+	<title>My_Qna</title>
+</head>
+<body>
+
+<div layout:fragment="Content" class="modify_box">
+
+	<h5>내가 쓴 문의글</h5>
+	<div th:if="${responseDTO.total == 0}" class="nothing">
+		<p>작성한 문의가 없습니다</p>
+		<a href="#">자주 묻는 질문 확인하기 >> </a>
+	</div>
+	<div th:if="${responseDTO.total>0}" class="something">
+		<span>현재까지 작성하신 문의글은 총 : </span><span th:text="${responseDTO.total}+개"></span>
+		<span>입니다</span>
+
+		<table>
+			<thead>
+			<tr>
+				<th scope="col">제목</th>
+				<th scope="col">작성일자</th>
+			</tr>
+			</thead>
+
+			<tbody th:with="link = ${pageRequestDTO.getLink()}">
+			<form class="myQna">
+				<tr th:each="dto:${responseDTO.dtoList}">
+					<input type="hidden" th:name="bdid" th:value="${dto.bdid}">
+					<input type="hidden" th:name="nickname" th:value="${dto.nickname}">
+					<td>[[${dto.title}]]</td>
+					<td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd')}]]</td>
+					<td th:if="${#strings.equals(session.mid, dto.memberId)}">
+						<a th:href="@{/board/modify_qna(bdid=${dto.bdid})}">수정</a>
+						<a onclick="deleteBtn(event)" href='#none'>삭제</a></td>
+				</tr>
+			</form>
+			</tbody>
+		</table>
+		<!--페이지 버튼-->
+		<div>
+			<ul class="myQnaPagination pagination_numbers">
+				<li class="page-item" th:if="${responseDTO.prev}">
+					<a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+				</li>
+				<!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+				<th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+					<li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+						<a class="page-link" th:data-num="${i}">[[${i}]]</a>
+						<!--data-num이라는 속성으로 페이지 처리-->
+					</li>
+				</th:block>
+				<li class="page-item" th:if="${responseDTO.next}">
+					<a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	
+</div>
+<script layout:fragment="script" th:inline="javascript">
+	
+	document.querySelector(".myQnaPagination").addEventListener("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		const target = e.target;
+		console.log(target);
+		
+		if (target.tagName !== 'A') {
+			return;
+		}
+		
+		const num = target.getAttribute("data-num");
+		
+		window.location.href = '/silbaram/member/my_qna?page=' + num
+	}, false)
+	
+	function deleteBtn(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		let myQnaConfirm = window.confirm("해당 문의글을 삭제하시겠습니까?");
+		if (myQnaConfirm) {
+			const formObj = document.querySelector(".myQna");
+			formObj.method = 'post'
+			formObj.action = '/silbaram/member/board/remove'
+			formObj.submit();
+		}
+	}
+
+</script>
+
+</body>
+</html>

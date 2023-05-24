@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:inline="css" th:href="@{/css/boards.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<div layout:fragment="Content" class="content_wrap">
+    <h3>책 요청 게시판 (<span th:text="${responseDTO.total}">0</span>개)</h3>
+    <form id="form1" action="/silbaram/board/request_book_list" method="post">
+        <div th:if="${session.mid}" id="request_book_list_div">
+            <input type="text" size="58" id="content" th:name="content" placeholder="책 이름,작가,출판사 등을 입력해주세요">
+            <input type="submit" value="등록">
+        </div>
+    </form>
+
+    <div id="boardList">
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">책이름</th>
+                    <th scope="col">신청자</th>
+                    <th scope="col">작성일</th>
+
+                </tr>
+                </thead>
+				
+                <tbody th:with="link = ${pageRequestDTO.getLink()}">
+                <tr th:each="dto:${responseDTO.dtoList}">
+                    <td>[[${dto.content}]]</td>
+                    <td>[[${dto.nickname}]]</td>
+                    <td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd')}]]</td>
+                    <td th:if="${#strings.equals(session.mid, dto.memberId)}">
+                        <a th:href="@{/templates/board/remove_request_book(bdid=${dto.bdid})}">삭제</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <!--페이지 버튼-->
+            <div class="pagination_for_board">
+                <ul>
+                    <div th:if="${responseDTO.total > 0}">
+                        <li class="page-item" th:if="${responseDTO.prev}">
+                            <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                        </li>
+                    </div>
+                    <!--#numbers.sequence : 특정한 범위의 연속된 숫자를 만듦-->
+                    <!--                    @{/board/view(id = ${board.id})}-->
+                    <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                        <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                            <a class="page-link" th:data-num="${i}"
+                               th:href="@{/templates/board/request_book_list(page=${i})}">[[${i}]]</a>
+                            <!--data-num이라는 속성으로 페이지 처리-->
+                        </li>
+                    </th:block>
+                    <li th:if="${responseDTO.next}">
+                        <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</body>
+</html>

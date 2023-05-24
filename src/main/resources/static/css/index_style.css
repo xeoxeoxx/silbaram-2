@@ -1,0 +1,53 @@
+.book_box{
+    width: 1000px;
+    height: 400px;
+    margin: 0 auto;
+    border: 1.5px solid goldenrod;
+    margin-top: 10px;
+}
+
+.book_box2{
+    width: 1000px;
+    height: 400px;
+    border: 1.5px solid lightgray;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.bx-wrapper{
+    margin: 0 auto;
+}
+
+.inner_banner{
+    height: 300px;
+    border-radius: 15px;
+    margin: 0 auto;
+}
+
+.banner1{
+    background-color: salmon;
+}
+
+.banner2{
+    background-color: bisque;
+}
+
+.banner3{
+    background-color: lightsteelblue;
+}
+
+.banner4{
+    background-color: lightgoldenrodyellow;
+}
+
+.banner5{
+    background-color: lightseagreen;
+}
+
+.banner6{
+    background-color: lightslategray;
+}
+
+h3{
+    text-align: center;
+}

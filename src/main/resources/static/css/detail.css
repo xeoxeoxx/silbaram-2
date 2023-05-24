@@ -1,0 +1,188 @@
+.mybookListBox{
+    width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+#bookInfo{
+    width: 100%;
+    height: 550px;
+    display: flex;
+    padding: 15px;
+    flex-wrap: wrap;
+}
+
+#bookImg{
+    width: 350px;
+    height: 500px;
+    background-color: #88C4BE;
+    margin-right: 15px;
+}
+
+#bookImg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#bookText{
+    width: 500px;
+    height: 250px;
+}
+
+#bookText > div{
+    display: flex;
+}
+
+#bookText > div:first-child p{
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+#bookText > div:nth-child(2) p{
+    font-size: 26px;
+    font-weight: 700;
+    width: 300px;
+    color: black;
+    margin-bottom: 15px;
+}
+
+#bookText > div p{
+    color: #333;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+#bookText > div span{
+    color: #666;
+    margin-right: 10px;
+}
+
+.synopsis{
+    width: 100%;
+    height: 80px;
+    background-color: #DDD;
+    margin-top: 20px;
+}
+
+#bookVoice{
+    margin-top: 10px;
+    height: 160px;
+    background-color: #A4EBE1;
+}
+
+#cart_and_purchase{
+    width: 100%;
+    height: 50px;
+}
+
+#cart_and_purchase button{
+    float: right;
+    -webkit-appearance: none;
+    width: 80px;
+    height: 40px;
+    color: white;
+    display: block;
+    text-align: center;
+    border: none;
+}
+
+#cart_and_purchase button:first-child{
+    background-color: #BBB;
+}
+
+#cart_and_purchase button:last-child{
+    background-color: #50CDBB;
+    margin-right: 15px;
+}
+
+#divider{
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid #50CDBB;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+h4{
+    font-size: 28px;
+    color: #88C4BE;
+}
+
+#reviewBlock{
+    width: 80%;
+    height: 500px;
+    margin: 25px auto 10px;
+}
+
+#reviewBlock > div:first-child{
+    width: 100%;
+    height: 210px;
+}
+
+#reviewForm fieldset{
+    width: 800px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#reviewForm fieldset legend{
+    color: #333;
+    font-style: italic;
+}
+
+#reviewForm fieldset div{
+    margin-left: 15px;
+}
+
+#rvCmt{
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+#rvCmt textarea{
+    -webkit-appearance: none;
+    width: 100%;
+    height: 100px;
+}
+
+#reviewBlock table{
+    width: 100%;
+    height: 150px;
+    background-color: #A4EBE1;
+}
+
+.more{
+    width: 100%;
+    height: 50px;
+    background-color: #BBBBBB;
+}
+
+.showReview{
+    width: 100%;
+    height: 200px;
+}
+
+.showReview > span{
+    display: block;
+    color: #333;
+}
+
+.showReview > #reviewContainer{
+
+}
+
+.synopsis{
+    margin-bottom: 15px;
+}
+
+.voicePlayer{
+    margin-top: 10px;
+}
+
+#audio{
+    display: none;
+}

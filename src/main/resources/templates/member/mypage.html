@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Silbaram</title>
+    <link th:inline="css" th:href="@{/css/mypage.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Silbaram</h1>
+
+<div layout:fragment="Content" class="mypageWrap">
+    <h3>마이페이지</h3>
+
+    <div class="mypageContentWrap">
+        <div class="myPageList">
+            <ul>
+                <li>마이페이지 홈</li>
+                <li>회원정보
+                    <ul>
+                        <li><a href="/mypage/membermodify">회원정보 수정</a></li>
+                        <li><a href="/mypage/resetpw">비밀번호 변경</a></li>
+                        <li><a href="/mypage/memberquit">회원탈퇴</a></li>
+                    </ul>
+                </li>
+                <li>
+                    개인
+                    <ul>
+                        <li><a href="/mypage/mybooks">내 서재</a></li>
+                        <li><a href="/board/my_review">내가 쓴 리뷰</a></li>
+                        <li><a href="/board/my_request">내가 쓴 책 요청글</a></li>
+                        <li><a href="/board/my_qna">내가 쓴 문의글</a></li>
+                    </ul>
+                </li>
+                <li>구매
+                    <ul>
+                        <li><a href="#">구매 내역</a></li>
+                        <li><a href="#">쿠폰</a></li>
+                    </ul>
+                </li>
+                <li>고객센터
+                    <ul>
+                        <li><a href="#">자주 묻는 도움말</a></li>
+                        <li><a href="#">1:1 고객상담</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <div class="mypagecontent">
+            <div class="books_and_carts">
+                <div class="mydata" th:with="member = ${memberDTO}">
+                    <p>ID : <span th:text="${member.userId}"></span></p>
+                    <p>Email : <span th:text="${member.email}"></span></p>
+
+                    <button>Logout</button>
+                </div>
+                <div class="book_cart_data">
+                    <div>
+                        <img th:src="@{/resources/open-book.png}">
+                        <p th:with="dto = ${responseDTO.dtoList}">
+                            내 서재 <br> <span>[[${dto.size()}]]</span>권
+                        </p>
+                    </div>
+                    <div>
+                        <img th:src="@{/resources/shopping-bag.png}">
+                        <p>
+                            내 카트 <br> <span>[[${cartDtoList.size()}]]</span>권
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent_books">
+                <div th:with="link = ${pageRequestDTO.getLink()}">
+                    <div th:each="dto : ${responseDTO.dtoList}">
+                        <div class="bookImage">
+
+                        </div>
+                        <div class="bookData">
+                            <p th:text="${dto.bookName}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="etc">
+                    <span><a href="#">서재 더보기 >> </a></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+</body>
+</html>

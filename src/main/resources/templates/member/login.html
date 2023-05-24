@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html  lang="en"
+       xmlns:th="http://www.thymeleaf.org"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link th:inline="css" th:href="@{/css/login.css}" rel="stylesheet">
+</head>
+
+<body>
+<h1>Login</h1>
+
+<div layout:fragment="Content">
+    <!--메인 페이지 내용-->
+    <div id="contentBox">
+        <div id="loginBox">
+            <div id="imgBox"></div>
+            <form method="post" th:action="@{/login}" id="loginForm">
+                <div>
+                    <label for="userId">User ID:</label>
+                    <input type="text" id="userId" name="userId" required autofocus>
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <label for="auto">자동 로그인:</label>
+                    <input type="checkbox" id="auto" name="auto">
+                </div>
+                <div>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=2d4da76a7e51b2d482ac929a10ee544b&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code" class="kakao">카카오로그인</a>
+                </div>
+                <div>
+                    <a th:href="@{/silbaram/find_id}">아이디찾기</a>
+                    <a th:href="@{/silbaram/find_pw}">패스워드찾기</a>
+                </div>
+                <div>
+                    <button type="submit" class="login">Log in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script layout:fragment="script" th:inline="javascript">
+    $(document).ready(function() {
+        let message = "[[${msg}]]";
+        console.log(message);
+        if (message != "") {
+            alert(message);
+        }else {
+        }
+    })
+</script>
+</body>
+</html>

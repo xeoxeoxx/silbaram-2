@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="HeaderFragment">
+    <!--Header Fragment -->
+    <div class="header">
+        <div id="user_tab">
+            <ul>
+                <li th:if="${session.mid == null}">
+                    <a href="/signup">회원가입</a>
+                </li>
+                <li th:if="${session.mid == null}">
+                    <a href="/login">로그인</a>
+                </li>
+                <li th:if="${session.mid}">
+                    <a href="/mypage">마이페이지</a>
+                </li>
+                <li th:if="${session.mid}">
+                    <form action="/logout" method="post">
+                        <button type="submit">로그아웃</button>
+                    </form>
+                </li>
+                <li><a href="#">고객센터</a></li>
+            </ul>
+        </div>
+
+        <div id="header_top">
+            <div id="logo">
+                <a href="/index">
+                    <img th:src="@{/resources/logo.png}" />
+                </a>
+            </div>
+
+            <div id="header_searchbar">
+                <form name="main_searchbox" class="mainSearchForm" method="get" action="/products/list">
+                    <select title="검색 유형" id="msType">
+                        <option value="total">전체검색</option>
+                        <option value="name">제목 검색</option>
+                        <option value="writer">작가 검색</option>
+                    </select>
+                    <input type="text" id="msKeyword" placeholder="검색내용을 입력해주세요">
+                    <button type="submit">
+                        <img th:src="@{/resources/search.png}">
+                    </button>
+                </form>
+            </div>
+
+<!--            <div id="header_searchbar">-->
+<!--                <form name="main_searchbox" class="mainSearchForm" method="get" action="/products/list">-->
+<!--                    <input type="hidden" name="size" th:value="${pageRequestDTO.size}">-->
+<!--                    <select title="검색 유형" id="searchType" name="types">-->
+<!--                        <option value="nw" selected th:selected="${pageRequestDTO.types == 'nw'}">전체검색</option>-->
+<!--                        <option value="n" th:selected="${pageRequestDTO.types == 'n'}">제목 검색</option>-->
+<!--                        <option value="w" th:selected="${pageRequestDTO.types == 'w'}">작가 검색</option>-->
+<!--                    </select>-->
+<!--                    <input type="text" id="keyword" placeholder="검색내용을 입력해주세요" th:value="${pageRequestDTO.keyword}">-->
+<!--                    <button type="submit" class="searchBtn">-->
+<!--                        <img th:src="@{/resources/search.png}">-->
+<!--                    </button>-->
+<!--                </form>-->
+<!--            </div>-->
+
+            <div id="header_icons">
+                <div id="cart">
+                    <a href="/cart/cart_list"><img th:src="@{/resources/trolley.png}"> </a>
+
+                </div>
+                <div id="my_books">
+                    <a href="/mypage/mybooks"> <img th:src="@{/resources/three-books.png}"></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</html>

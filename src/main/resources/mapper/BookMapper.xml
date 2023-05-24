@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.silbaram.dao.BookDAO">
+
+<!-- seonghoon   -->
+    <insert id="insertBook">
+        INSERT INTO `book` (`name`, `writer`, `publisher`, `price`, `synopsis`, `pages`, `isbnNum`,
+                            `cid`, `fileSize`, `lid`, `voiceLength`, `bookUrl`)
+        VALUES (#{name}, #{writer}, #{publisher}, #{price}, #{synopsis}, #{pages}, #{isbnNum},
+                #{category}, #{fileSize}, #{language}, #{voiceLength}, #{bookUrl})
+    </insert>
+
+    <select id="getBookList" resultType="com.project.silbaram.vo.BookVO">
+        SELECT * FROM `book`
+    </select>
+
+    <select id="selectById" parameterType="int" resultType="com.project.silbaram.vo.BookVO">
+        select * from `book` where bkid = #{id}
+    </select>
+
+    <update id="updateBook" parameterType="com.project.silbaram.vo.BookVO">
+        UPDATE `book` SET `name`=#{name}, `writer`=#{writer}, `publisher`=#{publisher},
+                          `price`=#{price}, `synopsis`=#{synopsis}, `pages`=#{pages},
+                          `isbnNum`=#{isbnNum}, `cid`=#{category},
+                          `fileSize`=#{fileSize}, `lid`=#{language},
+                          `voiceLength`=#{voiceLength}, `bookUrl`=#{bookUrl}
+        WHERE `bkid`=#{bkid}
+    </update>
+
+    <delete id="deleteBookById" parameterType="long">
+        DELETE FROM book WHERE bkid = #{bkid}
+    </delete>
+
+    <select id="getBookById" resultType="com.project.silbaram.vo.BookVO">
+        SELECT *
+        FROM book
+        WHERE bkid = #{bkid}
+    </select>
+
+<!--  chae  -->
+    <select id="list" resultType="com.project.silbaram.vo.BookVO">
+        SELECT * FROM `book` order by `bkid` desc
+    </select>
+
+<!--    <select id="selectOne" resultType="com.project.silbaram.vo.BookVO">-->
+<!--        SELECT * FROM `book` WHERE `bkid` = #{bkid}-->
+<!--    </select>-->
+
+    <select id="selectOne" resultType="com.project.silbaram.vo.BookVO">
+        SELECT b.*, c.cateName, l.language
+        FROM book b
+        JOIN category c ON b.cid = c.cid
+        JOIN language l ON b.lid = l.lgid
+        WHERE b.bkid = #{bkid};
+    </select>
+
+    <sql id="search">
+        <where>
+            <if test="types != null and types.length > 0">
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR">
+                    <if test="type == 'nw'.toString()">
+                        b.name like concat('%', #{keyword}, '%')
+                        OR
+                        b.writer like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'n'.toString()">
+                        b.name like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        b.writer like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+            <if test="cid != null">
+                <if test="types != null and types.length > 0">
+                and
+                </if>
+                b.cid = #{cid}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="selectList" resultType="com.project.silbaram.vo.BookVO">
+        select * from `book` b
+                 join category c on b.cid = c.cid
+        <include refid="search"></include>
+        order by b.bkid desc limit #{skip}, #{size}
+    </select>
+    <!--mybatis는 getXXX, setXXX을 통해서 동작하기때문에 skip은 getSkip()을 호출-->
+
+    <select id="getCount" resultType="int">
+        select count(b.bkid)
+        from `book` b
+        <include refid="search"></include>
+    </select>
+
+    <select id="isBuyerByBkIdAndMid" resultType="Boolean">
+        select count(*) > 0
+        from `orderinfo`
+        where bookId = #{bkid} and memberId = #{mid}
+    </select>
+
+
+    <select id="getCategoryById" resultType="String">
+        select cateName from `category` where cid = #{cid}
+    </select>
+
+    <select id="getCountByBookKeyword" resultType="int">
+        select count(*) from book where name  like concat('%', #{keyword}, '%')
+    </select>
+
+    <select id="getCountByWriterKeyword" resultType="int">
+        select count(*) from book where writer like concat('%', #{keyword}, '%')
+    </select>
+
+    <select id="getBookBycategoryAndCnt" resultType="map">
+        select
+            c.cateName, count(c.cateName)  as cnt, c.cid
+        from book b
+                 join category c on b.cid = c.cid
+        where (`name`  like concat('%', #{keyword}, '%')) or  (`writer`  like concat('%', #{keyword}, '%'))
+        group by c.cateName
+        having count(c.cateName) > 0
+    </select>
+
+    <resultMap id="bookResultMap" type="com.project.silbaram.vo.BookVO">
+        <id column="bkid" property="bkid" />
+        <result column="name" property="name" />
+        <result column="writer" property="writer" />
+        <result column="publisher" property="publisher" />
+        <result column="price" property="price" />
+        <result column="synopsis" property="synopsis" />
+        <result column="pages" property="pages" />
+        <result column="isbnNum" property="isbnNum" />
+        <result column="cid" property="cid" />
+        <result column="fileSize" property="fileSize" />
+        <result column="lid" property="lid" />
+        <result column="voiceLength" property="voiceLength" />
+        <result column="bookUrl" property="bookUrl" />
+        <result column="bookTextUrl" property="bookTextUrl" />
+        <result column="bookImage" property="bookImage" />
+
+        <association property="categoryVO" javaType="com.project.silbaram.vo.CategoryVO">
+            <result column="cid" property="cid" />
+            <result column="cateName" property="cateName" />
+        </association>
+
+        <association property="languageVO" javaType="com.project.silbaram.vo.LanguageVO">
+            <result column="language" property="language" />
+            <result column="lgid" property="lgid" />
+
+        </association>
+    </resultMap>
+
+    <select id="adminbookList" resultMap="bookResultMap" resultType="com.project.silbaram.vo.BookVO">
+        SELECT b.bkid, b.name, b.writer, b.publisher, b.price, b.synopsis, b.pages,
+        b.isbnNum, b.fileSize, b.voiceLength, b.bookUrl, b.bookTextUrl, b.bookImage, b.cid,b.lid,
+        c.cateName, c.cid, l.language, l.lgid
+        FROM book b
+        LEFT JOIN category c ON b.cid = c.cid
+        LEFT JOIN language l ON b.lid = l.lgid
+        <include refid="search"></include>
+        order by b.bkid desc limit #{skip, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+    </select>
+    <!--mybatis는 getXXX, setXXX을 통해서 동작하기때문에 skip은 getSkip()을 호출-->
+
+    <select id="getOneBookById" resultMap="bookResultMap" parameterType="Long" resultType="com.project.silbaram.vo.BookVO">
+        SELECT b.bkid, b.name, b.writer, b.publisher, b.price, b.synopsis, b.pages,
+               b.isbnNum, b.fileSize, b.voiceLength, b.bookUrl, b.bookTextUrl, b.bookImage,
+               c.cateName, l.language
+        FROM book b
+                 JOIN category c ON b.cid = c.cid
+                 JOIN language l ON b.lid = l.lgid
+        WHERE `bkid` = #{bkid}
+    </select>
+
+</mapper>

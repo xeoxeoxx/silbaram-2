@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.silbaram.dao.ReviewDAO">
+
+    <select id="getNow" resultType="string">
+        select now()
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `review` (`title`, `content`, `mid`, `reviewLike`, `bkid`, `regDate`)
+        VALUES ('', #{content}, #{mid}, #{reviewLike}, #{bkid}, now())
+    </insert>
+
+    <!--  <select id="selectAll" resultType="com.project.silbaram.vo.ReviewVO">
+        SELECT * FROM `review` order by `rid` desc
+       </select>
+    -->
+
+    <select id="selectAll" resultType="com.project.silbaram.vo.ReviewVO">
+        SELECT *
+        FROM `review` r
+                 join `member` m on r.mid = m.mid
+    </select>
+
+    <select id="selectOne" resultType="com.project.silbaram.vo.ReviewVO">
+        SELECT *
+        FROM `review`
+        WHERE `rid` = #{rid}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM `review`
+        WHERE `rid` = #{rid}
+    </delete>
+
+    <update id="update">
+        UPDATE `review`
+        SET `content`  = #{content},
+            reviewLike = #{reviewLike}
+        WHERE `rid` = #{rid}
+    </update>
+
+
+    <sql id="search">
+        <where>
+            <if test="types != null and types.length > 0">
+                <foreach collection="types" item="type" open="(" close=")" separator=" OR">
+                    <if test="type == 't'.toString()">
+                        title like concat('%', #{keyword}, '%')
+                    </if>
+                    <if test="type == 'w'.toString()">
+                        writer like concat('%', #{keyword}, '%')
+                    </if>
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <!--    mybatis는 getXXX, setXXX을 통해서 동작하기때문에 skip은 getSkip()을 호출-->
+
+    <select id="getCount" resultType="int">
+        select count(rid)
+        from review
+        <include refid="search"></include>
+    </select>
+
+    <select id="selectReviewByMid" resultType="com.project.silbaram.vo.ReviewVO">
+        select r.*, m.nickname
+        from `review` r
+                 join member m on r.mid = m.mid
+        where r.bkid = #{bkid}
+          and r.mid = #{mid}
+        order by r.rid desc
+        limit 0, 1
+    </select>
+
+    <select id="listThree" resultType="com.project.silbaram.vo.ReviewVO">
+        select r.*, m.nickname
+        from `review` r
+                 join member m on r.mid = m.mid
+        where r.bkid = #{bkid}
+        order by r.rid desc
+        limit 0, 5
+    </select>
+
+    <select id="selectAllByBkid" resultType="com.project.silbaram.vo.ReviewVO">
+        select r.*, m.nickname
+        from `review` r
+                 join member m on r.mid = m.mid
+        where r.bkid = #{bkid}
+        order by r.rid desc
+    </select>
+
+    <select id="list" resultType="com.project.silbaram.vo.ReviewVO">
+        select *
+        from `review` r
+                 join `member` m on r.mid = m.mid
+        where r.bkid = #{bkid}
+        order by r.rid desc
+        limit #{skip}, #{size}
+    </select>
+
+    <select id="selectAllCountByBkid" resultType="int">
+        select count(rid)
+        from `review` r
+        where r.bkid = #{bkid}
+        order by r.rid desc
+    </select>
+
+
+    <!--    <select id="myReviewList" resultType="com.project.silbaram.vo.ReviewVO">-->
+    <!--        SELECT r.*-->
+    <!--        FROM `review` r-->
+    <!--        LEFT JOIN `member` m ON r.mid = m.mid-->
+    <!--        WHERE r.mid = #{mid}-->
+    <!--        ORDER BY r.rid DESC-->
+    <!--        LIMIT #{skip}, #{size}-->
+    <!--    </select>-->
+
+    <select id="myReviewList" resultType="com.project.silbaram.vo.ReviewVO">
+        SELECT r.*, b.name AS bookName
+        FROM `review` r
+                 LEFT JOIN `member` m ON r.mid = m.mid
+                 LEFT JOIN `book` b ON r.bkid = b.bkid
+        WHERE r.mid = #{mid}
+        ORDER BY r.rid DESC
+        LIMIT #{skip}, #{size}
+    </select>
+
+    <select id="getCountByMid" resultType="int">
+        SELECT COUNT(r.rid)
+        FROM review r
+        WHERE r.mid = #{mid}
+    </select>
+
+
+
+</mapper>

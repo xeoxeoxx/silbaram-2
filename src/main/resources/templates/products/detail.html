@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout/layout.html}">
+
+<head>
+	<link th:inline="css" th:href="@{/css/detail.css}" rel="stylesheet">
+	<link th:inline="css" th:href="@{/css/green-audio-player.min.css}" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>Book detail</title>
+	<style>
+		.input_cart_added{
+			padding: 5px;
+			border: 0;
+			background-color: orange;
+		}
+
+		.input_cart_not_added{
+			padding: 5px;
+			border-color: orange;
+			background-color: transparent;
+		}
+	</style>
+
+</head>
+<body>
+
+<div layout:fragment="Content" class="mybookListBox">
+
+	<div id="bookInfo">
+		<div id="bookImg">
+			<img th:src="${bookImageFileName}" alt="책 이미지">
+		</div>
+		<div id="bookText">
+			<div>
+				<p th:text="${dto.cateName}">
+			</div>
+			<div>
+				<p th:text="${dto.name}">
+			</div>
+			<div>
+
+				<p th:text="${dto.writer}"></p><span> 저 </span>
+			</div>
+			<div>
+				<p th:text="${dto.publisher}"></p><span> 출판 </span>
+			</div>
+			<div>
+				<span>지원 언어 : </span>
+				<p th:text="${dto.language}"></p>
+			</div>
+			<div>
+				<p th:text="${dto.price}"></p><span> 원</span>
+			</div>
+			<div>
+				<span>ISBN : </span>
+				<p th:text="${dto.isbnNum}"></p>
+			</div>
+			<div>
+				<p th:text="${dto.isbnNum}"></p><span>페이지 </span>
+			</div>
+			<div class="synopsis">
+				<p th:text="${dto.synopsis}"></p>
+			</div>
+
+			<div class="voicePlayer">
+				<audio id="audio" th:src="${bookTxtFileName}" controls></audio>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div id="cart_and_purchase">
+		<input type="button" id="cart_input" value="카트에 담기">
+		<a th:href="@{/cart/order}">바로 구매</a>
+	</div>
+
+	<div id="divider">
+		<h4>리뷰</h4>
+	</div>
+
+
+	<div id="reviewBlock">
+		<!--<div th:if="${(isBuyer && !isWrite)} or ${isModify}">-->
+		<div>
+			<div th:if="${mdrv != null}">
+				<input type="hidden" id="rv_content" th:value="${mdrv.content}">
+				<input type="hidden" id="rid" th:value="${mdrv.rid}">
+				<input type="hidden" id="rv_like" th:value="${mdrv.reviewLike}">
+			</div>
+			<form id="reviewForm" action="/silbaram/review/register" method="post">
+				<fieldset>
+					<legend>이 책을 추천하고싶나요?</legend>
+					<div>
+						<input type="radio" id="likeRv" name="reviewLike" value="true"
+							   checked>
+						<label for="likeRv">좋아요</label>
+					</div>
+					<div>
+						<input type="radio" id="unlikeRv" name="reviewLike" value="false">
+						<label for="unlikeRv">별로예요</label>
+					</div>
+
+				</fieldset>
+				<div id="rvCmt" class="row_txtArea">
+					<span>한글 기준 250자까지 작성가능</span>
+					<input type="hidden" name="mid" th:value="${session.mid}"/>
+					<input type="hidden" name="bkid" th:value="${dto.bkid}"/>
+					<textarea id="comment" th:name="content" th:maxlength="250" th:placeholder="${session.mid}? (${isBuyer} ?  (  ${isWrite} ? '이미 리뷰를 작성하셨습니다.'  : '리뷰를 작성해주세요.')  : '구매 후 작성 가능합니다.') : '로그인 이후 작성 가능합니다.' " autocomplete="off"></textarea>
+				</div>
+
+				<input type="submit" id="submitBtn" th:if="${(isBuyer && !isWrite)} or ${isModify}" value="등록">
+				<input type="button" id="deleteBtn" onclick="onDelete(event)" value="삭제" style="display: none;">
+
+			</form>
+		</div>
+
+		<div class="showReview">
+			<span th:text="'총 리뷰 '+${reviewCnt}+'개'"></span>
+			<table id="reviewContainer">
+				<tr th:each="review:${list}">
+					<th scope="col">[[${review.rid}]]</th>
+					<td th:text="${review.reviewLike} ? '좋아요' : '별로예요' "></td>
+					<td>[[${review.content}]]</td>
+					<td>[[${review.nickname}]]</td>
+					<td>[[${#temporals.format(review.regDate,'yyyy-MM-dd')}]]</td>
+					<td th:if="${#strings.equals(session.mid, review.mid)}"><a
+							th:href="@{/templates/products/detail(bkid=${dto.bkid},isModify=true)}">수정/삭제</a></td>
+				</tr>
+
+			</table>
+
+			<div class="more" th:if="${reviewCnt > 5}">
+				<button id="moreBtn" onclick="handleBtn(event)" th:text="'리뷰 '+(${reviewCnt}-5)+'개 더보기'"></button>
+			</div>
+
+		</div>
+
+
+	</div>
+</div>
+
+	<script layout:fragment="script" th:inline="javascript">
+		let pg = 1;
+
+		document.addEventListener('DOMContentLoaded', function () {
+
+			/*<![CDATA[*/
+			const isModify = [[${isModify}]]
+			/*]]>*/
+			console.log("isModify", isModify)
+			//
+			//수정모드가 맞다면 true가 전달되어 옴
+			if (isModify) {
+				// 숨겨놓은 삭제 버튼 활성화  //style="display: none;" -> block
+				var d = document.getElementById('deleteBtn');
+				d.style.display = 'block';
+
+				let content = document.getElementById("rv_content")
+				let rid = document.getElementById("rid")
+				let like = document.getElementById("rv_like")
+
+				// 기존 입력 form을 수정 form으로 변경
+				// action : register -> modify
+				// rid 밸류 값 들어가도록 hidden input 엘리먼트 추가
+				const formObj = document.querySelector("#reviewForm");
+				formObj.action = `/silbaram/review/modify`;
+				formObj.method = 'post';
+				formObj.innerHTML += `<input type='hidden' name='rid' value='` + rid.value + `'>`;
+
+				// 기존 textarea에 수정하고자하는 리뷰의 컨텐트 불러오기
+				const txta = document.querySelector("textarea")
+				txta.value = content.value
+
+				//const likeRadioBtn = document.querySelector("radio")
+				if (like) {
+					document.getElementById('likeRv').checked = true
+					//  document.getElementById('unlikeRv').checked =
+				} else {
+					document.getElementById('unlikeRv').checked = true
+				}
+
+				// 글자수
+				//let countElMd = document.querySelector('#count');
+				//countElMd.innerText = txta.value.length
+			}
+
+
+		})
+
+		function onDelete(e) {
+			// let e = element
+			// console.log(e)
+			e.preventDefault();
+			e.stopPropagation();
+			let content = document.getElementById("rv_content")
+			let rid = document.getElementById("rid")
+
+			let form = document.querySelector("#reviewForm");
+			form.action = `/silbaram/review/remove`;
+			form.method = 'post';
+			form.innerHTML += `<input type='hidden' name='rid' value='` + rid.value + `'>`;
+
+			form.submit();
+		}
+
+		function handleBtn(e) {
+			let content = "";
+			let remain = [[${reviewCnt}]];
+			let count = [[${reviewCnt}]]
+
+			if(count <= (pg*10)) {
+				e.target.style.display = 'none'
+			}
+
+			$.ajax({
+				type: 'get',
+				url: '/silbaram/review/list_ajax?page=' + pg + "&bkid=" + [[${dto.bkid}]],
+				//ata: data,
+				success: function (data) {
+					console.log(data)
+
+					for(let i = 0; i < data.length; i++){
+						// content = "<table id='reviewContainer'>"
+						content += "<tbody><tr>"
+						content += "<th scope='col'>"+ data[i].rid +"</th>"
+						content += "<td>"+(data[i].reviewLike ? '좋아요' : '별로예요')+"</td>"
+						content += "<td>"+ data[i].content +"</td>"
+						content += "<td>"+ data[i].nickname +"</td>"
+						content += "<td>"+   data[i].regDate +"</td>"
+
+						content += "</tr></tbody>"
+					}
+
+					if(pg == 1){
+						document.getElementById('reviewContainer').innerHTML = content
+					}else {
+						document.getElementById('reviewContainer').innerHTML += content
+					}
+
+					pg++;
+
+
+
+					// if(count <= (pg*10)){
+					//    e.target.style.display = 'none'
+					//    }else{
+					remain -= data.length;
+					e.target.innerText = `리뷰 ${remain}개 더보기`
+					//    }
+
+
+				}, error: function (e) {
+					console.log(e)
+				}
+			});
+
+		}
+
+		document.addEventListener('DOMContentLoaded', function(){
+			new GreenAudioPlayer('.voicePlayer');
+		});
+
+		let bkid = [[${dto.bkid}]];
+		let cart_input = document.getElementById("cart_input");
+		let check = null;
+		// window.onload = inputCartCheck();
+
+			$.ajax({
+				type: "GET",
+				url: "/cart/cart_input_check",
+				data: { bkid: bkid },
+				success: function(response) {
+					console.log(response);
+
+					if (response) {
+						console.log("중복입니다");
+						check = true;
+						cart_input.classList.remove('input_cart_not_added');
+						cart_input.classList.add('input_cart_added');
+
+					} else {
+						console.log("중복이 아닙니다");
+						check = false;
+						cart_input.classList.remove('input_cart_added');
+						cart_input.classList.add('input_cart_not_added');
+						cart_input.addEventListener('click', checkCartInput);
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error("에러 발생: " + error);
+				}
+			});
+
+		// 중복이 아닐 경우 아이템 추가
+		function checkCartInput() {
+			$.ajax({
+				type: "GET",
+				url: "/cart/cart_inputCart_check",
+				data: { bkid: bkid },
+				success: function(response) {
+					console.log("카트 추가 성공(ajax)")
+					document.querySelector('#cart_input').style.backgroundColor = 'yellow';
+					cart_input.disabled = true;
+				},
+				error: function(xhr, status, error) {
+					console.error("에러 발생: " + error);
+				}
+			});
+		}
+
+		// inputCartCheck();
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>INDEX</title>
+</head>
+<body>
+    <div layout:fragment="nav">
+        <div th:replace="fragments/nav" :: NavFragment></div>
+    </div>
+
+    <div layout:fragment="Content" class="indexBox">
+        <div class="banner_box">
+            <h3>기획전</h3>
+            <div class="banner_wrap">
+                <div class="inner_banner banner1">
+                    <p>Content1</p>
+                    <div></div>
+                </div>
+                <div class="inner_banner banner2">
+                    <p>Content2</p>
+                </div>
+                <div class="inner_banner banner3">
+                    <p>Content3</p>
+                </div>
+                <div class="inner_banner banner4">
+                    <p>Content4</p>
+                </div>
+                <div class="inner_banner banner5">
+                    <p>Content5</p>
+                </div>
+                <div class="inner_banner banner6">
+                    <p>Content6</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumpTo">
+            <div id="board">
+                <a href="/board/request_book_list">
+                    <img class="icons" src="">
+                    <span>책 요청<br>모아보기</span>
+                </a>
+            </div>
+            <div id="best">
+                <a href="/products/list">
+                    <img class="icons" src="">
+                    <span>베스트셀러</span>
+                </a>
+            </div>
+            <div id="newbooks">
+                <a href="/products/list">
+                    <img class="icons" src="">
+                    <span>신간도서</span>
+                </a>
+            </div>
+            <div id="qna">
+                <a th:href="@{/templates/board/list_qna}">
+                    <img class="icons" src="">
+                    <span>1:1 문의하기</span>
+                </a>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <script th:inline="javascript" type="text/javascript" th:src="@{/js/audioplayer.js}"></script>
+    <script layout:fragment="script" th:inline="javascript">
+
+    </script>
+
+</body>
+</html>

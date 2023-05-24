@@ -1,0 +1,168 @@
+.mypageWrap{
+    width: 1200px;
+    padding: 20px;
+    margin: 70px auto;
+}
+
+.mypageWrap h3{
+    font-size: 24px;
+    color: #50CDBB;
+    font-weight: 700;
+    margin: 20px 0 20px 0;
+}
+
+.mypageContentWrap{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.myPageList{
+    width: 150px;
+    height: 100%;
+    margin-right: 15px;
+}
+
+.myPageList ul li{
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.myPageList ul li > a{
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.myPageList ul li ul li a{
+    color: #777;
+    font-size: 14px;
+}
+
+.mypagecontent{
+    width: calc(100% - 150px);
+    height: 100%;
+}
+
+.books_and_carts{
+    width : 100%;
+    height: 150px;
+    border: 1px solid #93CAC2;
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.books_and_carts .mydata{
+    width: 200px;
+    height: 100%;
+    background-color: #50CDBB;
+    padding: 15px 0 0 15px;
+}
+
+.mydata button{
+    -webkit-appearance: none;
+    color: #333;
+    background-color: white;
+    width: 70px;
+    height: 30px;
+    float: right;
+    margin-right: 20px;
+    border-radius: 10px;
+    border: none;
+}
+
+.mydata p span{
+    color : #333;
+    font-size : 14px;
+}
+
+.books_and_carts .mydata p{
+    color: white;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.books_and_carts .book_cart_data{
+    width: calc(100% - 200px);
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.book_cart_data div{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.book_cart_data div img{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.book_cart_data div p{
+    color: #777;
+}
+
+.book_cart_data div p span{
+    color: #50CDBB;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.recent_books{
+    width: 100%;
+    height : 500px;
+}
+
+.recent_books > div:first-child{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.recent_books > div > div{
+    width: calc(90% / 5);
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    margin-right : 10px;
+    margin-bottom: 15px;
+
+}
+
+.recent_books > div div:nth-child(5n){
+    margin-right: 0;
+}
+
+.recent_books > div div .bookImage{
+    width: 100%;
+    height: 180px;
+    background-color: #93CAC2;
+}
+
+.recent_books > div div .bookData{
+    width: 100%;
+    height: 70px;
+}
+
+.bookData p{
+    color: #777;
+    font-size: 14px;
+}
+
+.etc{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.etc span a{
+    margin-right: 15px;
+    color: #333;
+}

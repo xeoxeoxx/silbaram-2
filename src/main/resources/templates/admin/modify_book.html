@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>QnA Board Modify</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Book Modify
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/modify_book}" method="post" id="f1">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">bkid</span>
+                            <input type="text" class="form-control" name="bkid" th:value="${dto.bkid}" readonly>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" class="form-control" name="name" th:value="${dto.name}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Writer</span>
+                            <input type="text" class="form-control" name="writer" th:value="${dto.writer}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Publisher</span>
+                            <input type="text" class="form-control" name="publisher" th:value="${dto.publisher}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Price</span>
+                            <input type="text" class="form-control" name="price" th:value="${dto.price}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Synopsis</span>
+                            <input type="text" class="form-control" name="sysopsis" th:value="${dto.synopsis}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Pages</span>
+                            <input type="text" class="form-control" name="pages" th:value="${dto.pages}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">IsbnNum</span>
+                            <input type="text" class="form-control" name="isbnNum" th:value="${dto.isbnNum}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span>category:
+                                <select class="form-control" name="category.cid">
+            <option th:value="${dto.category.cid}" selected="selected">[[${dto.category.cateName}]]</option>
+                                    <option value="100">소설/장르문학</option>
+                                    <option value="101">예술/대중문화</option>
+                                    <option value="102">에세이/시</option>
+                                    <option value="103">만화/그래픽노블</option>
+                                    <option value="104">외국어</option>
+                                    <option value="105">경영/경제</option>
+                                    <option value="106">역사/법</option>
+                                    <option value="107">정치/사회과학</option>
+                                    <option value="108">컴퓨터/인터넷/기술</option>
+                                    <option value="109">자연과학</option>
+                                    <option value="110">종교</option>
+                                    <option value="111">어린이/청소년</option>
+                                    <option value="112">가정/생활</option>
+                                    <option value="113">건강/스포츠</option>
+                                    <option value="114">자기계발</option>
+                                    <option value="115">해외도서/잡지</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">fileSize</span>
+                            <input type="text" class="form-control" name="fileSize" th:value="${dto.fileSize}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span>language:
+                                <select class="form-control" name="language.lgid">
+        <option th:value="${dto.language.lgid}" selected="selected">[[${dto.language.language}]]</option>
+                                    <option value="207">한국어</option>
+                                    <option value="201">영어</option>
+                                    <option value="202">일본어</option>
+                                    <option value="203">중국어</option>
+                                    <option value="204">스페인어</option>
+                                    <option value="205">프랑스어</option>
+                                    <option value="206">아랍어</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">voiceLength</span>
+                            <input type="text" class="form-control" name="voiceLength" th:value="${dto.voiceLength}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">bookUrl</span>
+                            <input type="text" class="form-control" name="bookUrl" th:value="${dto.bookUrl}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">bookTextUrl</span>
+                            <input type="text" class="form-control" name="bookTextUrl" th:value="${dto.bookTextUrl}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">bookImage</span>
+                            <input type="text" class="form-control" name="bookImage" th:value="${dto.bookImage}">
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+
+                                <button type="button" class="btn btn-primary listBtn">List</button>
+                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const errors = [[${errors}]]
+    console.log(errors);
+
+    let errorMsg = ''
+
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`;
+        }
+        history.replaceState({}, null, null);
+        alert(errorMsg);
+    }
+
+    const link = [[${pageRequestDTO.getLink()}]];
+    const formObj = document.querySelector("#f1");
+
+    document.querySelector(".modBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // alert("게시글이 수정되었습니다!");
+        formObj.action = `/admin/modify_book?${link}`;
+        formObj.method = 'post';
+        formObj.submit();
+    }, false);
+
+    document.querySelector(".removeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // alert("게시글을 삭제하였습니다!");
+        formObj.action = `/admin/remove?${link}`;
+        formObj.method = 'post';
+        formObj.submit();
+    }, false);
+
+    document.querySelector(".listBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.reset();
+        self.location = `/admin/admin_book_list?${link}`;
+    }, false);
+</script>
+
+</body>
+</html>

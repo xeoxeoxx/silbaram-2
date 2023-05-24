@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="Content">
+    <form id="form1" action="/silbaram/review/modify" method="post">
+        <div id="rvCmt" class="row_txtArea">
+            <span>
+                <label for="comment">한글 기준 250자까지 작성가능</label>
+                <span><strong id="count">0</strong>/250</span>
+                <input type="hidden" name="mid"  th:value="${session.mid}"/>
+				<input type="hidden" name="bkid"  th:value="${dto.bkid}"/>
+                <input type="hidden" name="rid"  th:value="${dto.rid}"/>
+
+                <textarea id="comment" th:text="${dto.content}" th:name="content" th:maxlength="250" autocomplete="off"></textarea>
+            </span>
+        </div>
+        <input type="submit" value="등록">
+        <input type="button" id="removeBtn" value="삭제">
+    </form>
+</div>
+
+
+
+<script layout:fragment="script" th:inline="javascript">
+    const formObj = document.querySelector("#form1");
+
+    document.querySelector("#removeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.action = `/silbaram/review/remove`;
+        formObj.method = 'post';
+        formObj.submit();
+    }, false);
+
+    document.querySelector("#comment").addEventListener("input", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+
+        console.log(target.value)
+
+        let count = target.value.length;
+
+        if (count >= 250) {
+            alert("250자까지 작성 가능합니다.")
+            target.value = target.value.substring(0, 250);
+            count = 250;
+        }
+        const countEl = document.getElementById('count');
+        countEl.innerText = count
+    }, false)
+</script>
+</body>
+</html>

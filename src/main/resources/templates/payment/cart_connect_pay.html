@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 토스페이 동작 스크립트 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://js.tosspayments.com/v1"></script>
+    <script th:inline="javascript">
+
+        let amount = [[${totalPrice}]];  // 총 가격
+        let radioButtons_value = [[${method}]] // 결제 요청창 호출 파라미타1
+
+        let tossPayments = TossPayments("test_ck_OEP59LybZ8Bdv6A1JxkV6GYo7pRe"); // 테스트용 클라이언트 키
+
+        let path = "/";
+        let successUrl = window.location.origin + path + "silbaram/payment/" + "success";
+        let failUrl = window.location.origin + path + "silbaram/payment/" + "fail";
+        let callbackUrl = window.location.origin + path + "va_callback";
+        // let orderId = new Date().toISOString().slice(0, 10).replace(/-/g, '') + generateRandomText(4); //주문번호 자동생성
+        let orderId = [[${orderId}]];
+        let bkids = [[${bkids}]];
+
+        // 결제 요청창 호출 파라미타2
+        let jsons = {
+            "card": {
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl,
+                "cardCompany": null,
+                "cardInstallmentPlan": null,
+                "maxCardInstallmentPlan": null,
+                "useCardPoint": false,
+                "customerName": "박토스",
+                "customerEmail": null,
+                "customerMobilePhone": null,
+                "taxFreeAmount": null,
+                "useInternationalCardOnly": false,
+                "flowMode": "DEFAULT",
+                "discountCode": null,
+                "appScheme": null
+            },
+            "vaccount": { //가상계좌 결제창
+
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl,
+                "validHours": 72,
+                "virtualAccountCallbackUrl": callbackUrl,
+                "customerName": "박토스",
+                "customerEmail": null,
+                "customerMobilePhone": null,
+                "taxFreeAmount": null,
+                "cashReceipt": {
+                    "type": "소득공제"
+                },
+                "useEscrow": false
+
+            },
+            "transfer": { //계좌이체 결제창
+
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl,
+                "customerName": "박토스",
+                "customerEmail": null,
+                "customerMobilePhone": null,
+                "taxFreeAmount": null,
+                "cashReceipt": {
+                    "type": "소득공제"
+                },
+                "useEscrow": false
+
+            },
+            "phone": { // 휴대폰 결제창
+
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl,
+                "mobileCarrier": null
+
+            },
+
+            "certificate": { //상품권 결제창
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl
+            },
+
+            "bookcert": { //도서문화상품권 결제창
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl
+            },
+            "gamecert": { // 게임문화상품권 결제창
+                "amount": amount,
+                "orderId": "sample-" + orderId,
+                "orderName": "토스 티셔츠 외 2건",
+                "successUrl": successUrl,
+                "failUrl": failUrl
+            }
+        };
+
+        // 결제창 호출
+        function pay() {
+            switch (radioButtons_value) {
+                case '카드':
+                    tossPayments.requestPayment(radioButtons_value, jsons.card)
+                        .catch(function (error) {
+                            if (error.code === "USER_CANCEL") {
+                                alert('유저가 취소했습니다.');
+                                window.location = window.location.origin + path + "silbaram/cart/cartlist";
+                            } else {
+                                alert(error.message);
+                            }
+                        });
+                    break;
+                case '가상계좌':
+                    tossPayments.requestPayment(radioButtons_value, jsons.vaccount)
+                        .catch(function (error) {
+                            if (error.code === "USER_CANCEL") {
+                                alert('유저가 취소했습니다.');
+                                window.location = window.location.origin + path + "silbaram/cart/cartlist";
+                            } else {
+                                alert(error.message);
+                            }
+                        });
+                    break;
+                case '계좌이체':
+                    tossPayments.requestPayment(radioButtons_value, jsons.transfer)
+                        .catch(function (error) {
+                            if (error.code === "USER_CANCEL") {
+                                alert('유저가 취소했습니다.');
+                                window.location = window.location.origin + path + "silbaram/cart/cartlist";
+                            } else {
+                                alert(error.message);
+                            }
+                        });
+                    break;
+                case '휴대폰':
+                    tossPayments.requestPayment(radioButtons_value, jsons.phone)
+                        .catch(function (error) {
+                            if (error.code === "USER_CANCEL") {
+                                alert('유저가 취소했습니다.');
+                                window.location = window.location.origin + path + "silbaram/cart/cartlist";
+                            } else {
+                                alert(error.message);
+                            }
+                        });
+                    break;
+                case '문화상품권':
+                    tossPayments.requestPayment(radioButtons_value, jsons.certificate)
+                        .catch(function (error) {
+                            if (error.code === "USER_CANCEL") {
+                                alert('유저가 취소했습니다.');
+                            } else {
+                                alert(error.message);
+                            }
+                        });
+                    break;
+            }
+        }
+
+        /* 랜덤 주문번호 생성 (cart_list.html에서 버튼 클릭시 생성으로 변경) */
+        /*function generateRandomText(length) {
+            let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let randomText = Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+            return randomText;
+        }*/
+
+        pay();
+
+    </script>
+
+</head>
+<body>
+
+
+</body>
+</html>
