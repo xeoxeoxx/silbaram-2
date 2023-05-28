@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @Builder
 public class MemberModifyDTO {
     private Long mid;
+    private String name;
+    private String nickName;
     @NotEmpty
     private String phoneNumber;
     private String zipcode;

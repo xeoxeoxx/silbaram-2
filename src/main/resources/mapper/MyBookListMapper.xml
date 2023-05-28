@@ -16,7 +16,7 @@
         <include refid="search"></include>
         AND o.`memberId` = #{memberId}
         <if test="param1.sortType == 'recent'">
-            ORDER BY `oid` DESC
+            ORDER BY `ogid` DESC
         </if>
         <if test="param1.sortType == 'spell'">
             ORDER BY b.`name` ASC
@@ -26,7 +26,7 @@
 
 
     <select id="getCount" resultType="int">
-        select count(o.oid)
+        select count(o.ogid)
         from `orderinfo` o
         join `book` b on o.bookId = b.bkid
         <include refid="searchone"></include>
