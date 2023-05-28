@@ -65,8 +65,9 @@
     <update id="updateMember">
         UPDATE member
         SET
+            name = IFNULL(#{name}, name),
+            nickName = IFNULL(#{nickName}, nickName),
             phoneNumber = IFNULL(#{phoneNumber}, phoneNumber),
-            email       = IFNULL(#{email}, email),
             zipcode     = IFNULL(#{zipcode}, zipcode),
             address1    = IFNULL(#{address1}, address1),
             address2    = IFNULL(#{address2}, address2)
